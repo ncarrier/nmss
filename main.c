@@ -1,12 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include <error.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
-static void sdl_window_cleanup(SDL_Window **window) {
+#include "input.h"
+#include "ship.h"
+
+static void sdl_window_cleanup(struct SDL_Window **window) {
 	if (window == NULL || *window == NULL)
 		return;
 
@@ -14,7 +17,7 @@ static void sdl_window_cleanup(SDL_Window **window) {
 	*window = NULL;
 }
 
-static void sdl_renderer_cleanup(SDL_Renderer **renderer) {
+static void sdl_renderer_cleanup(struct SDL_Renderer **renderer) {
 	if (renderer == NULL || *renderer == NULL)
 		return;
 
@@ -22,30 +25,15 @@ static void sdl_renderer_cleanup(SDL_Renderer **renderer) {
 	*renderer = NULL;
 }
 
-static void sdl_texture_cleanup(SDL_Texture **texture) {
-	if (texture == NULL || *texture == NULL)
-		return;
-
-	SDL_DestroyTexture(*texture);
-	*texture = NULL;
-}
-
-static void sdl_surface_cleanup(SDL_Surface **surface) {
-	if (surface == NULL || *surface == NULL)
-		return;
-
-	SDL_FreeSurface(*surface);
-	*surface = NULL;
-}
-
 int main(int argc, char *argv[])
 {
-	SDL_Window __attribute__((cleanup(sdl_window_cleanup)))*window = NULL;
-	SDL_Renderer __attribute__((cleanup(sdl_renderer_cleanup)))*renderer = NULL;
-	SDL_Texture __attribute__((cleanup(sdl_texture_cleanup)))*texture = NULL;
-	SDL_Surface __attribute__((cleanup(sdl_surface_cleanup)))*surface = NULL;
+	struct SDL_Window __attribute__((cleanup(sdl_window_cleanup)))*window = NULL;
+	struct SDL_Renderer __attribute__((cleanup(sdl_renderer_cleanup)))*renderer = NULL;
 	int ret;
+	struct input __attribute__((cleanup(input_cleanup))) input;
+	struct ship __attribute__((cleanup(ship_cleanup))) ship;
 
+	input_init(&input);
 	ret = SDL_Init(SDL_INIT_EVERYTHING);
 	if (ret != 0)
 		error(EXIT_FAILURE, 0, "SDL_Init: %s", SDL_GetError());
@@ -54,23 +42,18 @@ int main(int argc, char *argv[])
 			SDL_WINDOWPOS_UNDEFINED, 256, 64, SDL_WINDOW_SHOWN);
 	if (window == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateWindow: %s", SDL_GetError());
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateRenderer: %s", SDL_GetError());
-	SDL_RenderClear(renderer);
-	surface = IMG_Load("res/ship.png");
-	if (surface == NULL)
-		error(EXIT_FAILURE, 0, "IMG_Load: %s", SDL_GetError());
+	ship_init(&ship, renderer);
 
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture == NULL)
-		error(EXIT_FAILURE, 0, "SDL_CreateTexture: %s", SDL_GetError());
-
-	SDL_Rect dst = {10, 10, 8, 8};
-	SDL_RenderCopy(renderer, texture, NULL, &dst);
-	SDL_RenderPresent(renderer);
-
-	SDL_Delay(1000);
+	input.loop = true;
+	while (input.loop) {
+		SDL_RenderClear(renderer);
+		input_update(&input);
+		ship_update(&ship, &input);
+		SDL_RenderPresent(renderer);
+	}
 
 	return 0;
 }
