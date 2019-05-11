@@ -18,7 +18,7 @@ void shoot_update(struct shoot *shoot) {
 	object_render(&shoot->object);
 	shoot->object.dst.x += 2;
 	if (shoot->object.dst.x > SCREEN_WIDTH)
-		shoot->dead = true;
+		shoot_set_dead(shoot);
 }
 
 bool shoot_is_dead(const struct shoot *shoot)

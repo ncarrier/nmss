@@ -7,11 +7,13 @@ struct object {
 	struct SDL_Texture *texture;
 	struct SDL_Renderer *renderer;
 	struct SDL_Rect dst;
+	SDL_RendererFlip flip;
 };
 
 void object_init(struct object *object, struct SDL_Renderer *renderer,
 		const struct SDL_Rect *rect, const char *image);
 void object_render(struct object *object);
+void object_toggle_flip(struct object *object, SDL_RendererFlip flip);
 void object_cleanup(struct object *object);
 
 #endif /* OBJECT_H_ */

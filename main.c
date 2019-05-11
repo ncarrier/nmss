@@ -7,7 +7,7 @@
 #include <SDL2/SDL.h>
 
 #include "input.h"
-#include "ship.h"
+#include "game.h"
 
 static void sdl_window_cleanup(struct SDL_Window **window) {
 	if (window == NULL || *window == NULL)
@@ -30,10 +30,8 @@ int main(int argc, char *argv[])
 	struct SDL_Window __attribute__((cleanup(sdl_window_cleanup)))*window = NULL;
 	struct SDL_Renderer __attribute__((cleanup(sdl_renderer_cleanup)))*renderer = NULL;
 	int ret;
-	struct input __attribute__((cleanup(input_cleanup))) input;
-	struct ship __attribute__((cleanup(ship_cleanup))) ship;
+	struct game __attribute__((cleanup(game_cleanup))) game;
 
-	input_init(&input);
 	ret = SDL_Init(SDL_INIT_EVERYTHING);
 	if (ret != 0)
 		error(EXIT_FAILURE, 0, "SDL_Init: %s", SDL_GetError());
@@ -45,13 +43,11 @@ int main(int argc, char *argv[])
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateRenderer: %s", SDL_GetError());
-	ship_init(&ship, renderer);
 
-	input.loop = true;
-	while (input.loop) {
+	game_init(&game, renderer);
+	while (game.input.loop) {
 		SDL_RenderClear(renderer);
-		input_update(&input);
-		ship_update(&ship, &input);
+		game_update(&game);
 		SDL_RenderPresent(renderer);
 	}
 

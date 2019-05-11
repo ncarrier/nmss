@@ -37,10 +37,21 @@ static void remove_shoot(struct ship *ship, unsigned i) {
 	ship->nb_shoots--;
 }
 
-void ship_update(struct ship *ship, struct input *input) {
+static void update_shoots(struct ship *ship) {
 	unsigned i;
 	struct shoot *shoot;
 
+	for (i = 0; i < ship->nb_shoots; ) {
+		shoot = ship->shoot + i;
+		shoot_update(shoot);
+		if (shoot_is_dead(shoot))
+			remove_shoot(ship, i);
+		else
+			i++;
+	}
+}
+
+static void move_ship(struct ship *ship, struct input *input) {
 	if (input->down_down) {
 		ship->object.dst.y++;
 		if (ship->object.dst.y > SCREEN_HEIGHT - 6)
@@ -61,20 +72,17 @@ void ship_update(struct ship *ship, struct input *input) {
 		if (ship->object.dst.x > SCREEN_WIDTH - 8)
 			ship->object.dst.x--;
 	}
+}
+
+void ship_update(struct ship *ship, struct input *input) {
+	move_ship(ship, input);
 	object_render(&ship->object);
 
 	if (input->a_down)
 		do_shoot(ship);
 	if (ship->intershoot_delay > 0)
 		ship->intershoot_delay--;
-	for (i = 0; i < ship->nb_shoots; ) {
-		shoot = ship->shoot + i;
-		shoot_update(shoot);
-		if (shoot_is_dead(shoot))
-			remove_shoot(ship, i);
-		else
-			i++;
-	}
+	update_shoots(ship);
 }
 
 void ship_cleanup(struct ship *ship) {

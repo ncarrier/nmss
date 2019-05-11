@@ -21,6 +21,7 @@ void object_init(struct object *object, struct SDL_Renderer *renderer,
 
 	object->renderer = renderer;
 	object->dst = *rect;
+	object->flip = SDL_FLIP_NONE;
 	surface = IMG_Load(image);
 	if (surface == NULL)
 		error(EXIT_FAILURE, 0, "IMG_Load: %s", SDL_GetError());
@@ -31,7 +32,12 @@ void object_init(struct object *object, struct SDL_Renderer *renderer,
 }
 
 void object_render(struct object *object) {
-	SDL_RenderCopy(object->renderer, object->texture, NULL, &object->dst);
+	SDL_RenderCopyEx(object->renderer, object->texture, NULL, &object->dst,
+			0., NULL, object->flip);
+}
+
+void object_toggle_flip(struct object *object, SDL_RendererFlip flip) {
+	object->flip ^= flip;
 }
 
 void object_cleanup(struct object *object) {
