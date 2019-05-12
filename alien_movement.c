@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "alien_movement.h"
@@ -14,11 +15,28 @@ static int mvt_y_0(const struct alien_movement *mvt, int x, int y) {
 }
 
 static int mvt_x_1(const struct alien_movement *mvt, int x, int y) {
-	return x - 1;
+	return x - 1 + (random() % 3) - 1;
 }
 
 static int mvt_y_1(const struct alien_movement *mvt, int x, int y) {
-	return y;
+	return y + (random() % 5) - 2;
+}
+
+static int mvt_x_2(const struct alien_movement *mvt, int x, int y) {
+	return x - 1 + (random() % 3) - 1;
+}
+
+static int mvt_y_2(const struct alien_movement *mvt, int x, int y) {
+	return cos((mvt->t + (random() % 3) - 1) * 0.1) *
+		(SCREEN_HEIGHT / 3.) + (SCREEN_HEIGHT / 2);
+}
+
+static int mvt_x_3(const struct alien_movement *mvt, int x, int y) {
+	return sin(mvt->t * 0.1) * (SCREEN_HEIGHT / 3.) + (SCREEN_WIDTH) - mvt->t;
+}
+
+static int mvt_y_3(const struct alien_movement *mvt, int x, int y) {
+	return cos(mvt->t * 0.1) * (SCREEN_HEIGHT / 3.) + (SCREEN_HEIGHT / 2);
 }
 
 /* template movements for easy implementation of _init */
@@ -30,6 +48,14 @@ static const struct alien_movement movements[] = {
 	{
 		.mvt_x = mvt_x_1,
 		.mvt_y = mvt_y_1,
+	},
+	{
+		.mvt_x = mvt_x_2,
+		.mvt_y = mvt_y_2,
+	},
+	{
+		.mvt_x = mvt_x_3,
+		.mvt_y = mvt_y_3,
 	},
 };
 
