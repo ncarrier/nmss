@@ -97,12 +97,30 @@ const struct SDL_Rect *ship_get_bounding_box(const struct ship *ship) {
 	return &ship->bounding_box;
 }
 
-bool ship_is_dead(struct ship *ship) {
+bool ship_is_dead(const struct ship *ship) {
 	return ship->dead;
 }
 
 void ship_set_dead(struct ship *ship) {
 	ship->dead = true;
+}
+
+bool ship_shoot_hits(struct ship *ship, const struct SDL_Rect *rect) {
+	unsigned i;
+	struct shoot *shoot;
+	bool hits;
+
+	for (i = 0; i < ship->nb_shoots; i++) {
+		shoot = ship->shoot + i;
+		hits = shoot_collides(shoot, rect);
+		if (hits) {
+			shoot_set_dead(shoot);
+			remove_shoot(ship, i);
+			return hits;
+		}
+	}
+
+	return false;
 }
 
 void ship_cleanup(struct ship *ship) {

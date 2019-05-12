@@ -42,6 +42,10 @@ bool alien_collides(const struct alien *alien, const struct SDL_Rect *rect) {
 	return SDL_HasIntersection(&alien->object.dst, rect);
 }
 
+const struct SDL_Rect *alien_get_bounding_box(const struct alien *alien) {
+	return &alien->object.dst;
+}
+
 void alien_cleanup(struct alien *alien) {
 	object_cleanup(&alien->object);
 }

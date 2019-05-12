@@ -31,6 +31,10 @@ void shoot_set_dead(struct shoot *shoot)
 	shoot->dead = true;
 }
 
+bool shoot_collides(const struct shoot *shoot, const struct SDL_Rect *rect) {
+	return SDL_HasIntersection(&shoot->object.dst, rect);
+}
+
 void shoot_cleanup(struct shoot *shoot)
 {
 	object_cleanup(&shoot->object);

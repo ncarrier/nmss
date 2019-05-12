@@ -61,9 +61,24 @@ static void check_alien_ship_collisions(struct game *game) {
 	}
 }
 
+static void check_alien_shoot_collisions(struct game *game) {
+	unsigned i;
+	struct alien *alien;
+	const struct SDL_Rect *alien_bb;
+
+	for (i = 0; i < game->nb_aliens; i++) {
+		alien = game->alien + i;
+		alien_bb = alien_get_bounding_box(alien);
+		if (ship_shoot_hits(&game->ship, alien_bb)) {
+			alien_set_dead(alien);
+		}
+	}
+}
+
 static void check_collisions(struct game *game) {
 	if (!ship_is_dead(&game->ship))
 		check_alien_ship_collisions(game);
+	check_alien_shoot_collisions(game);
 }
 
 void game_update(struct game *game) {
