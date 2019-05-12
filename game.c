@@ -7,6 +7,7 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 	game->nb_aliens = 0;
 	game->renderer = renderer;
 	game->alien_movement = 0;
+	game->spawned_aliens = 0;
 	input_init(&game->input);
 }
 
@@ -41,14 +42,17 @@ static void spawn_aliens(struct game *game) {
 	if (game->alien_popping_period > 0) {
 		game->alien_popping_period--;
 	} else {
-		if (game->nb_aliens < GAME_MAX_ALIENS)
+		if (game->nb_aliens < GAME_MAX_ALIENS) {
 			add_alien(game);
+			game->spawned_aliens++;
+		}
 		game->alien_popping_period = ALIEN_POPPING_PERIOD;
-		if (game->nb_aliens == GAME_MAX_ALIENS) {
+		if (game->spawned_aliens == GAME_MAX_ALIENS) {
 			game->alien_popping_period *= 10;
 			game->alien_movement++;
 			if (game->alien_movement == alien_movement_get_nb())
 				game->alien_movement = 0;
+			game->spawned_aliens = 0;
 		}
 	}
 }

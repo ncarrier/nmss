@@ -14,6 +14,7 @@ struct game {
 	unsigned alien_popping_period;
 	struct alien alien[GAME_MAX_ALIENS];
 	unsigned nb_aliens;
+	unsigned spawned_aliens;
 	struct input input;
 	struct SDL_Renderer *renderer;
 	unsigned alien_movement;
