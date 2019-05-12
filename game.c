@@ -12,7 +12,8 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 }
 
 static void add_alien(struct game *game) {
-	alien_init(game->alien + game->nb_aliens, game->renderer, game->alien_movement);
+	alien_init(game->alien + game->nb_aliens, game->renderer,
+			game->alien_movement, game->spawned_aliens);
 	game->nb_aliens++;
 }
 

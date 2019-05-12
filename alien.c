@@ -11,11 +11,12 @@ static const struct SDL_Rect alien_init_pos = {
 		.h = SCREEN_SPRITE_HEIGHT
 };
 
-void alien_init(struct alien *alien, struct SDL_Renderer *renderer, int movement) {
+void alien_init(struct alien *alien, struct SDL_Renderer *renderer,
+		int movement, unsigned alien_index) {
 	object_init(&alien->object, renderer, &alien_init_pos, ALIEN_IMAGE);
 	alien->dead = false;
 	alien->flip_counter = ALIEN_FLIP_PERIOD;
-	alien_movement_init(&alien->movement, movement);
+	alien_movement_init(&alien->movement, movement, alien_index);
 }
 
 void alien_update(struct alien *alien) {

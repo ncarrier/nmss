@@ -6,7 +6,7 @@
 #include "alien.h"
 #include "input.h"
 
-#define GAME_MAX_ALIENS 6
+#define GAME_MAX_ALIENS 12
 #define ALIEN_POPPING_PERIOD 30
 
 struct game {

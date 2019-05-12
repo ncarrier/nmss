@@ -14,7 +14,8 @@ struct alien {
 	struct alien_movement movement;
 };
 
-void alien_init(struct alien *alien, struct SDL_Renderer *renderer, int movement);
+void alien_init(struct alien *alien, struct SDL_Renderer *renderer,
+		int movement, unsigned alien_index);
 void alien_update(struct alien *alien);
 bool alien_is_dead(const struct alien *alien);
 void alien_set_dead(struct alien *alien);
