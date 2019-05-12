@@ -1,15 +1,17 @@
 #include "game.h"
+#include "alien_movement.h"
 
 void game_init(struct game *game, struct SDL_Renderer *renderer) {
 	ship_init(&game->ship, renderer);
 	game->alien_popping_period = ALIEN_POPPING_PERIOD;
 	game->nb_aliens = 0;
 	game->renderer = renderer;
+	game->alien_movement = 0;
 	input_init(&game->input);
 }
 
 static void add_alien(struct game *game) {
-	alien_init(game->alien + game->nb_aliens, game->renderer);
+	alien_init(game->alien + game->nb_aliens, game->renderer, game->alien_movement);
 	game->nb_aliens++;
 }
 
@@ -42,8 +44,12 @@ static void spawn_aliens(struct game *game) {
 		if (game->nb_aliens < GAME_MAX_ALIENS)
 			add_alien(game);
 		game->alien_popping_period = ALIEN_POPPING_PERIOD;
-		if (game->nb_aliens == GAME_MAX_ALIENS)
+		if (game->nb_aliens == GAME_MAX_ALIENS) {
 			game->alien_popping_period *= 10;
+			game->alien_movement++;
+			if (game->alien_movement == alien_movement_get_nb())
+				game->alien_movement = 0;
+		}
 	}
 }
 
@@ -57,6 +63,9 @@ static void check_alien_ship_collisions(struct game *game) {
 		alien = game->alien + i;
 		if (alien_collides(alien, ship_bb)) {
 			ship_set_dead(&game->ship);
+			alien_set_dead(alien);
+			/* TODO add explosion */
+			/* TODO add game over screen */
 		}
 	}
 }
@@ -71,6 +80,8 @@ static void check_alien_shoot_collisions(struct game *game) {
 		alien_bb = alien_get_bounding_box(alien);
 		if (ship_shoot_hits(&game->ship, alien_bb)) {
 			alien_set_dead(alien);
+			/* TODO add explosion */
+			/* TODO increase score */
 		}
 	}
 }

@@ -16,6 +16,7 @@ struct game {
 	unsigned nb_aliens;
 	struct input input;
 	struct SDL_Renderer *renderer;
+	unsigned alien_movement;
 };
 
 void game_init(struct game *game, struct SDL_Renderer *renderer);

@@ -11,15 +11,23 @@ static const struct SDL_Rect alien_init_pos = {
 		.h = SCREEN_SPRITE_HEIGHT
 };
 
-void alien_init(struct alien *alien, struct SDL_Renderer *renderer) {
+void alien_init(struct alien *alien, struct SDL_Renderer *renderer, int movement) {
 	object_init(&alien->object, renderer, &alien_init_pos, ALIEN_IMAGE);
 	alien->dead = false;
 	alien->flip_counter = ALIEN_FLIP_PERIOD;
+	alien_movement_init(&alien->movement, movement);
 }
 
 void alien_update(struct alien *alien) {
 	object_render(&alien->object);
-	alien->object.dst.x--;
+	alien->object.dst.x = alien_movement_get_x(
+			&alien->movement,
+			alien->object.dst.x,
+			alien->object.dst.y);
+	alien->object.dst.y = alien_movement_get_y(
+			&alien->movement,
+			alien->object.dst.x,
+			alien->object.dst.y);
 	if (alien->object.dst.x < -SCREEN_SPRITE_WIDTH)
 		alien_set_dead(alien);
 	alien->flip_counter--;
@@ -27,6 +35,7 @@ void alien_update(struct alien *alien) {
 		object_toggle_flip(&alien->object, SDL_FLIP_VERTICAL);
 		alien->flip_counter = ALIEN_FLIP_PERIOD;
 	}
+	alien_movement_update(&alien->movement);
 }
 
 bool alien_is_dead(const struct alien *alien) {
