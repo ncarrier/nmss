@@ -35,10 +35,7 @@ static void update_aliens(struct game *game) {
 			i++;
 	}
 }
-
-void game_update(struct game *game) {
-	input_update(&game->input);
-	ship_update(&game->ship, &game->input);
+static void spawn_aliens(struct game *game) {
 	if (game->alien_popping_period > 0) {
 		game->alien_popping_period--;
 	} else {
@@ -48,8 +45,34 @@ void game_update(struct game *game) {
 		if (game->nb_aliens == GAME_MAX_ALIENS)
 			game->alien_popping_period *= 10;
 	}
+}
 
+static void check_alien_ship_collisions(struct game *game) {
+	unsigned i;
+	struct alien *alien;
+	const struct SDL_Rect *ship_bb;
+
+	ship_bb = ship_get_bounding_box(&game->ship);
+	for (i = 0; i < game->nb_aliens; i++) {
+		alien = game->alien + i;
+		if (alien_collides(alien, ship_bb)) {
+			ship_set_dead(&game->ship);
+		}
+	}
+}
+
+static void check_collisions(struct game *game) {
+	if (!ship_is_dead(&game->ship))
+		check_alien_ship_collisions(game);
+}
+
+void game_update(struct game *game) {
+	input_update(&game->input);
+	ship_update(&game->ship, &game->input);
+	if (!ship_is_dead(&game->ship))
+		spawn_aliens(game);
 	update_aliens(game);
+	check_collisions(game);
 }
 
 void game_cleanup(struct game *game) {

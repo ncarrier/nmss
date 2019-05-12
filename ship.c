@@ -72,17 +72,37 @@ static void move_ship(struct ship *ship, struct input *input) {
 		if (ship->object.dst.x > SCREEN_WIDTH - 8)
 			ship->object.dst.x--;
 	}
+	ship->bounding_box = (struct SDL_Rect) {
+		.x = ship->object.dst.x,
+		.y = ship->object.dst.y + 2,
+		.w = ship->object.dst.w,
+		.h = ship->object.dst.h - 4,
+	};
 }
 
 void ship_update(struct ship *ship, struct input *input) {
-	move_ship(ship, input);
-	object_render(&ship->object);
+	if (!ship_is_dead(ship)) {
+		move_ship(ship, input);
+		object_render(&ship->object);
+		if (input->a_down)
+			do_shoot(ship);
+		if (ship->intershoot_delay > 0)
+			ship->intershoot_delay--;
+	}
 
-	if (input->a_down)
-		do_shoot(ship);
-	if (ship->intershoot_delay > 0)
-		ship->intershoot_delay--;
 	update_shoots(ship);
+}
+
+const struct SDL_Rect *ship_get_bounding_box(const struct ship *ship) {
+	return &ship->bounding_box;
+}
+
+bool ship_is_dead(struct ship *ship) {
+	return ship->dead;
+}
+
+void ship_set_dead(struct ship *ship) {
+	ship->dead = true;
 }
 
 void ship_cleanup(struct ship *ship) {

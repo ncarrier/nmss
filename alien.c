@@ -32,9 +32,14 @@ void alien_update(struct alien *alien) {
 bool alien_is_dead(const struct alien *alien) {
 	return alien->dead;
 }
+
 void alien_set_dead(struct alien *alien)
 {
 	alien->dead = true;
+}
+
+bool alien_collides(const struct alien *alien, const struct SDL_Rect *rect) {
+	return SDL_HasIntersection(&alien->object.dst, rect);
 }
 
 void alien_cleanup(struct alien *alien) {
