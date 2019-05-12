@@ -50,5 +50,13 @@ int alien_movement_get_x(struct alien_movement *mvt, int x, int y) {
 }
 
 int alien_movement_get_y(struct alien_movement *mvt, int x, int y) {
-	return mvt->mvt_y(mvt, x, y);
+	int result;
+
+	result = mvt->mvt_y(mvt, x, y);
+	if (result < 0)
+		return 0;
+	if (result > SCREEN_HEIGHT - 8)
+		return SCREEN_HEIGHT - 8;
+
+	return result;
 }
