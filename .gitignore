@@ -3,4 +3,6 @@ nmss
 .cproject
 *.swp
 *.swo
-
+nmss.html
+nmss.js
+nmss.wasm
