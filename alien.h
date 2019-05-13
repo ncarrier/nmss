@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "object.h"
+#include "shoot.h"
 #include "alien_movement.h"
 
 struct alien {
@@ -12,6 +13,7 @@ struct alien {
 	bool dead;
 	unsigned flip_counter;
 	struct alien_movement movement;
+	struct shoot shoot;
 };
 
 void alien_init(struct alien *alien, struct SDL_Renderer *renderer,
@@ -20,6 +22,8 @@ void alien_update(struct alien *alien);
 bool alien_is_dead(const struct alien *alien);
 void alien_set_dead(struct alien *alien);
 bool alien_collides(const struct alien *alien, const struct SDL_Rect *rect);
+bool alien_shoot_collides(const struct alien *alien,
+		const struct SDL_Rect *rect);
 const struct SDL_Rect *alien_get_bounding_box(const struct alien *alien);
 void alien_cleanup(struct alien *alien);
 

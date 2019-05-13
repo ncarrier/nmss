@@ -12,6 +12,7 @@ struct object {
 
 void object_init(struct object *object, struct SDL_Renderer *renderer,
 		const struct SDL_Rect *rect, const char *image);
+void object_set_pos(struct object *object, const struct SDL_Rect *rect);
 void object_render(struct object *object);
 void object_toggle_flip(struct object *object, SDL_RendererFlip flip);
 void object_cleanup(struct object *object);

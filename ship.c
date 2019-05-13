@@ -20,10 +20,13 @@ void ship_init(struct ship *ship, struct SDL_Renderer *renderer) {
 }
 
 static void do_shoot(struct ship *ship) {
+	struct shoot *shoot;
+
 	if (ship->intershoot_delay == 0 && ship->nb_shoots < SHIP_MAX_SHOOTS) {
+		shoot = ship->shoot + ship->nb_shoots;
 		ship->intershoot_delay = INTERSHOOT_DELAY;
-		shoot_init(ship->shoot + ship->nb_shoots, ship->object.renderer,
-				&ship->object.dst);
+		shoot_init(shoot, ship->object.renderer, true);
+		shoot_shoot(shoot, &ship->object.dst);
 		ship->nb_shoots++;
 	}
 }
@@ -114,7 +117,7 @@ bool ship_shoot_hits(struct ship *ship, const struct SDL_Rect *rect) {
 		shoot = ship->shoot + i;
 		hits = shoot_collides(shoot, rect);
 		if (hits) {
-			shoot_set_dead(shoot);
+			shoot_set_dead(shoot, true);
 			remove_shoot(ship, i);
 			return hits;
 		}

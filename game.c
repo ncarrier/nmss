@@ -72,6 +72,11 @@ static void check_alien_ship_collisions(struct game *game) {
 			/* TODO add explosion */
 			/* TODO add game over screen */
 		}
+		if (alien_shoot_collides(alien, ship_bb)) {
+			ship_set_dead(&game->ship);
+			/* TODO add explosion */
+			/* TODO add game over screen */
+		}
 	}
 }
 

@@ -7,13 +7,15 @@
 struct shoot {
 	struct object object;
 	bool dead;
+	int increment;
 };
 
 void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,
-		const struct SDL_Rect *ship_pos);
+		bool forward);
+void shoot_shoot(struct shoot *shoot, const struct SDL_Rect *rect);
 void shoot_update(struct shoot *shoot);
 bool shoot_is_dead(const struct shoot *shoot);
-void shoot_set_dead(struct shoot *shoot);
+void shoot_set_dead(struct shoot *shoot, bool dead);
 bool shoot_collides(const struct shoot *shoot, const struct SDL_Rect *rect);
 void shoot_cleanup(struct shoot *shoot);
 

@@ -20,7 +20,8 @@ void object_init(struct object *object, struct SDL_Renderer *renderer,
 	struct SDL_Surface __attribute__((cleanup(sdl_surface_cleanup)))*surface = NULL;
 
 	object->renderer = renderer;
-	object->dst = *rect;
+	if (rect != NULL)
+		object->dst = *rect;
 	object->flip = SDL_FLIP_NONE;
 	surface = IMG_Load(image);
 	if (surface == NULL)
@@ -29,6 +30,10 @@ void object_init(struct object *object, struct SDL_Renderer *renderer,
 	object->texture = SDL_CreateTextureFromSurface(object->renderer, surface);
 	if (object->texture == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateTexture: %s", SDL_GetError());
+}
+
+void object_set_pos(struct object *object, const struct SDL_Rect *rect) {
+	object->dst = *rect;
 }
 
 void object_render(struct object *object) {
