@@ -30,10 +30,13 @@ void object_init(struct object *object, struct SDL_Renderer *renderer,
 	object->texture = SDL_CreateTextureFromSurface(object->renderer, surface);
 	if (object->texture == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateTexture: %s", SDL_GetError());
+	object->dst.w = SCREEN_SPRITE_WIDTH;
+	object->dst.h = SCREEN_SPRITE_HEIGHT;
 }
 
 void object_set_pos(struct object *object, const struct SDL_Rect *rect) {
-	object->dst = *rect;
+	object->dst.x = rect->x;
+	object->dst.y = rect->y;
 }
 
 void object_render(struct object *object) {

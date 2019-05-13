@@ -1,0 +1,51 @@
+#include "explosion.h"
+#include "object.h"
+
+#define EXPLODE_1_IMAGE "res/explode_1.png"
+#define EXPLODE_2_IMAGE "res/explode_2.png"
+#define EXPLODE_3_IMAGE "res/explode_3.png"
+
+void explosion_init(struct explosion *explosion,
+		struct SDL_Renderer *renderer) {
+	object_init(&explosion->explode_1, renderer, NULL, EXPLODE_1_IMAGE);
+	object_init(&explosion->explode_2, renderer, NULL, EXPLODE_2_IMAGE);
+	object_init(&explosion->explode_3, renderer, NULL, EXPLODE_3_IMAGE);
+	explosion->phase = 0;
+}
+
+void explosion_update(struct explosion *explosion) {
+	if (explosion->phase == 0)
+		return;
+
+	switch (explosion->phase) {
+	case 1 ... 20:
+		object_render(&explosion->explode_3);
+		break;
+
+	case 21 ... 40:
+		object_render(&explosion->explode_2);
+		break;
+
+	case 41 ... 60:
+		object_render(&explosion->explode_1);
+		break;
+	}
+	explosion->phase--;
+}
+
+void explosion_start(struct explosion *explosion, const struct SDL_Rect *pos) {
+	object_set_pos(&explosion->explode_1, pos);
+	object_set_pos(&explosion->explode_2, pos);
+	object_set_pos(&explosion->explode_3, pos);
+	explosion->phase = 60;
+}
+
+bool explosion_is_dead(const struct explosion *explosion) {
+	return explosion->phase == 0;
+}
+
+void explosion_cleanup(struct explosion *explosion) {
+	object_cleanup(&explosion->explode_1);
+	object_cleanup(&explosion->explode_2);
+	object_cleanup(&explosion->explode_3);
+}

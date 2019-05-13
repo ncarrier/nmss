@@ -5,9 +5,11 @@
 #include "ship.h"
 #include "alien.h"
 #include "input.h"
+#include "explosion.h"
 
 #define GAME_MAX_ALIENS 12
 #define ALIEN_POPPING_PERIOD 30
+#define GAME_MAX_EXPLOSIONS 13
 
 struct game {
 	struct ship ship;
@@ -18,6 +20,7 @@ struct game {
 	struct input input;
 	struct SDL_Renderer *renderer;
 	unsigned alien_movement;
+	struct explosion explosion[GAME_MAX_EXPLOSIONS];
 };
 
 void game_init(struct game *game, struct SDL_Renderer *renderer);
