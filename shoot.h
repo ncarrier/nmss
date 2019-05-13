@@ -11,7 +11,7 @@ struct shoot {
 };
 
 void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,
-		bool forward);
+		int increment);
 void shoot_shoot(struct shoot *shoot, const struct SDL_Rect *rect);
 void shoot_update(struct shoot *shoot);
 bool shoot_is_dead(const struct shoot *shoot);

@@ -4,10 +4,10 @@
 #define SHOOT_IMAGE "res/shoot.png"
 
 void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,
-		bool forward) {
+		int increment) {
 	object_init(&shoot->object, renderer, NULL, SHOOT_IMAGE);
 	shoot_set_dead(shoot, true);
-	shoot->increment = forward ? 2 : -2;
+	shoot->increment = increment;
 }
 
 void shoot_shoot(struct shoot *shoot, const struct SDL_Rect *rect) {

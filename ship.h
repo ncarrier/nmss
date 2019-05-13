@@ -17,6 +17,7 @@ struct ship {
 	unsigned nb_shoots;
 	struct SDL_Rect bounding_box;
 	bool dead;
+	unsigned speed;
 };
 
 void ship_init(struct ship *ship, struct SDL_Renderer *renderer);

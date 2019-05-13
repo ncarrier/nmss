@@ -28,10 +28,11 @@ void ship_init(struct ship *ship, struct SDL_Renderer *renderer) {
 	object_init(&ship->object, renderer, &init_pos, SHIP_IMAGE);
 	ship->intershoot_delay = 0;
 	for (i = 0; i < SHIP_MAX_SHOOTS; i++)
-		shoot_init(ship->shoot + i, ship->object.renderer, true);
+		shoot_init(ship->shoot + i, ship->object.renderer, 3);
 	ship->nb_shoots = 0;
 	update_ship_bounding_box(ship);
 	ship->dead = false;
+	ship->speed = 2;
 }
 
 static struct shoot *find_dead_shoot(struct ship *ship) {
@@ -78,24 +79,24 @@ static void update_shoots(struct ship *ship) {
 
 static void move_ship(struct ship *ship, struct input *input) {
 	if (input->down_down) {
-		ship->object.dst.y++;
+		ship->object.dst.y += ship->speed;
 		if (ship->object.dst.y > SCREEN_HEIGHT - 6)
-			ship->object.dst.y--;
+			ship->object.dst.y -= ship->speed;
 	}
 	if (input->up_down) {
-		ship->object.dst.y--;
+		ship->object.dst.y -= ship->speed;
 		if (ship->object.dst.y < - 2)
-			ship->object.dst.y++;
+			ship->object.dst.y += ship->speed;
 	}
 	if (input->left_down) {
-		ship->object.dst.x--;
+		ship->object.dst.x -= ship->speed;
 		if (ship->object.dst.x < 0)
-			ship->object.dst.x++;
+			ship->object.dst.x += ship->speed;
 	}
 	if (input->right_down) {
-		ship->object.dst.x++;
+		ship->object.dst.x += ship->speed;
 		if (ship->object.dst.x > SCREEN_WIDTH - 8)
-			ship->object.dst.x--;
+			ship->object.dst.x -= ship->speed;
 	}
 	update_ship_bounding_box(ship);
 }

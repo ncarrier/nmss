@@ -24,6 +24,7 @@ void alien_set_dead(struct alien *alien);
 bool alien_collides(const struct alien *alien, const struct SDL_Rect *rect);
 bool alien_shoot_collides(const struct alien *alien,
 		const struct SDL_Rect *rect);
+void alien_shoot_set_dead(struct alien *alien);
 const struct SDL_Rect *alien_get_bounding_box(const struct alien *alien);
 void alien_cleanup(struct alien *alien);
 
