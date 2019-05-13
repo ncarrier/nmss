@@ -1,3 +1,6 @@
 nmss
 .project
 .cproject
+*.swp
+*.swo
+
