@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	int ret;
 	struct game __attribute__((cleanup(game_cleanup))) game;
 
-	ret = SDL_Init(SDL_INIT_EVERYTHING);
+	ret = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	if (ret != 0)
 		error(EXIT_FAILURE, 0, "SDL_Init: %s", SDL_GetError());
 	atexit(SDL_Quit);
