@@ -73,7 +73,8 @@ bool alien_collides(const struct alien *alien, const struct SDL_Rect *rect) {
 
 bool alien_shoot_collides(const struct alien *alien,
 		const struct SDL_Rect *rect) {
-	return SDL_HasIntersection(&alien->shoot.object.dst, rect);
+	return !shoot_is_dead(&alien->shoot) &&
+			SDL_HasIntersection(&alien->shoot.object.dst, rect);
 }
 
 const struct SDL_Rect *alien_get_bounding_box(const struct alien *alien) {

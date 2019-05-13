@@ -13,30 +13,52 @@
 
 static const struct SDL_Rect init_pos = { .x = 10, .y = 28, .w = 8, .h = 8 };
 
+static void update_ship_bounding_box(struct ship *ship) {
+	ship->bounding_box = (struct SDL_Rect) {
+		.x = ship->object.dst.x,
+		.y = ship->object.dst.y + 2,
+		.w = ship->object.dst.w,
+		.h = ship->object.dst.h - 4,
+	};
+}
+
 void ship_init(struct ship *ship, struct SDL_Renderer *renderer) {
+	unsigned i;
+
 	object_init(&ship->object, renderer, &init_pos, SHIP_IMAGE);
 	ship->intershoot_delay = 0;
+	for (i = 0; i < SHIP_MAX_SHOOTS; i++)
+		shoot_init(ship->shoot + i, ship->object.renderer, true);
 	ship->nb_shoots = 0;
+	update_ship_bounding_box(ship);
+	ship->dead = false;
+}
+
+static struct shoot *find_dead_shoot(struct ship *ship) {
+	unsigned i;
+	struct shoot *shoot;
+
+	for (i = 0; i < SHIP_MAX_SHOOTS; i++) {
+		shoot = ship->shoot + i;
+		if (shoot_is_dead(shoot))
+			return shoot;
+	}
+
+	return NULL;
 }
 
 static void do_shoot(struct ship *ship) {
 	struct shoot *shoot;
 
 	if (ship->intershoot_delay == 0 && ship->nb_shoots < SHIP_MAX_SHOOTS) {
-		shoot = ship->shoot + ship->nb_shoots;
+		shoot = find_dead_shoot(ship);
 		ship->intershoot_delay = INTERSHOOT_DELAY;
-		shoot_init(shoot, ship->object.renderer, true);
 		shoot_shoot(shoot, &ship->object.dst);
 		ship->nb_shoots++;
 	}
 }
 
 static void remove_shoot(struct ship *ship, unsigned i) {
-	unsigned j;
-
-	shoot_cleanup(ship->shoot + i);
-	for (j = i; j < SHIP_MAX_SHOOTS - 1; j++)
-		ship->shoot[j] = ship->shoot[j + 1];
 	ship->nb_shoots--;
 }
 
@@ -44,13 +66,13 @@ static void update_shoots(struct ship *ship) {
 	unsigned i;
 	struct shoot *shoot;
 
-	for (i = 0; i < ship->nb_shoots; ) {
+	for (i = 0; i < SHIP_MAX_SHOOTS; i++) {
 		shoot = ship->shoot + i;
+		if (shoot_is_dead(shoot))
+			continue;
 		shoot_update(shoot);
 		if (shoot_is_dead(shoot))
 			remove_shoot(ship, i);
-		else
-			i++;
 	}
 }
 
@@ -75,12 +97,7 @@ static void move_ship(struct ship *ship, struct input *input) {
 		if (ship->object.dst.x > SCREEN_WIDTH - 8)
 			ship->object.dst.x--;
 	}
-	ship->bounding_box = (struct SDL_Rect) {
-		.x = ship->object.dst.x,
-		.y = ship->object.dst.y + 2,
-		.w = ship->object.dst.w,
-		.h = ship->object.dst.h - 4,
-	};
+	update_ship_bounding_box(ship);
 }
 
 void ship_update(struct ship *ship, struct input *input) {
@@ -127,5 +144,10 @@ bool ship_shoot_hits(struct ship *ship, const struct SDL_Rect *rect) {
 }
 
 void ship_cleanup(struct ship *ship) {
+	unsigned i;
+
+	for (i = 0; i < SHIP_MAX_SHOOTS; i++)
+		shoot_cleanup(ship->shoot + i);
+
 	object_cleanup(&ship->object);
 }
