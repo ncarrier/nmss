@@ -1,11 +1,11 @@
 #include "shoot.h"
 #include "screen.h"
 
-#define SHOOT_IMAGE "res/shoot.png"
+#include "res/shoot.xpm"
 
 void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,
 		int increment) {
-	object_init(&shoot->object, renderer, NULL, SHOOT_IMAGE);
+	object_init(&shoot->object, renderer, NULL, shoot_xpm);
 	shoot_set_dead(shoot, true);
 	shoot->increment = increment;
 }

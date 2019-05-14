@@ -16,14 +16,14 @@ static void sdl_surface_cleanup(struct SDL_Surface **surface) {
 }
 
 void object_init(struct object *object, struct SDL_Renderer *renderer,
-		const struct SDL_Rect *rect, const char *image) {
+		const struct SDL_Rect *rect, char *image[]) {
 	struct SDL_Surface __attribute__((cleanup(sdl_surface_cleanup)))*surface = NULL;
 
 	object->renderer = renderer;
 	if (rect != NULL)
 		object->dst = *rect;
 	object->flip = SDL_FLIP_NONE;
-	surface = IMG_Load(image);
+	surface = IMG_ReadXPMFromArray(image);
 	if (surface == NULL)
 		error(EXIT_FAILURE, 0, "IMG_Load: %s", SDL_GetError());
 

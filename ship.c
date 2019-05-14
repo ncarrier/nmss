@@ -8,7 +8,8 @@
 #include "screen.h"
 #include "object.h"
 
-#define SHIP_IMAGE "res/ship.png"
+#include "res/ship.xpm"
+
 #define INTERSHOOT_DELAY 20
 
 static const struct SDL_Rect init_pos = { .x = 10, .y = 28, .w = 8, .h = 8 };
@@ -25,7 +26,7 @@ static void update_ship_bounding_box(struct ship *ship) {
 void ship_init(struct ship *ship, struct SDL_Renderer *renderer) {
 	unsigned i;
 
-	object_init(&ship->object, renderer, &init_pos, SHIP_IMAGE);
+	object_init(&ship->object, renderer, &init_pos, ship_xpm);
 	ship->intershoot_delay = 0;
 	for (i = 0; i < SHIP_MAX_SHOOTS; i++)
 		shoot_init(ship->shoot + i, ship->object.renderer, 3);

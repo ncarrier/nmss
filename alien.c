@@ -1,7 +1,8 @@
 #include "alien.h"
 #include "screen.h"
 
-#define ALIEN_IMAGE "res/alien.png"
+#include "res/alien.xpm"
+
 #define ALIEN_FLIP_PERIOD 20
 
 static const struct SDL_Rect alien_init_pos = {
@@ -13,7 +14,7 @@ static const struct SDL_Rect alien_init_pos = {
 
 void alien_init(struct alien *alien, struct SDL_Renderer *renderer,
 		int movement, unsigned alien_index) {
-	object_init(&alien->object, renderer, &alien_init_pos, ALIEN_IMAGE);
+	object_init(&alien->object, renderer, &alien_init_pos, alien_xpm);
 	alien->dead = false;
 	alien->flip_counter = ALIEN_FLIP_PERIOD;
 	alien_movement_init(&alien->movement, movement, alien_index);

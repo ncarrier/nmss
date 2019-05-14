@@ -1,15 +1,15 @@
 #include "explosion.h"
 #include "object.h"
 
-#define EXPLODE_1_IMAGE "res/explode_1.png"
-#define EXPLODE_2_IMAGE "res/explode_2.png"
-#define EXPLODE_3_IMAGE "res/explode_3.png"
+#include "res/explode_1.xpm"
+#include "res/explode_2.xpm"
+#include "res/explode_3.xpm"
 
 void explosion_init(struct explosion *explosion,
 		struct SDL_Renderer *renderer) {
-	object_init(&explosion->explode_1, renderer, NULL, EXPLODE_1_IMAGE);
-	object_init(&explosion->explode_2, renderer, NULL, EXPLODE_2_IMAGE);
-	object_init(&explosion->explode_3, renderer, NULL, EXPLODE_3_IMAGE);
+	object_init(&explosion->explode_1, renderer, NULL, explode_1_xpm);
+	object_init(&explosion->explode_2, renderer, NULL, explode_2_xpm);
+	object_init(&explosion->explode_3, renderer, NULL, explode_3_xpm);
 	explosion->phase = 0;
 }
 
