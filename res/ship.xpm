@@ -1,8 +1,8 @@
 /* XPM */
 static char * ship_xpm[] = {
 "8 8 2 1",
-" 	g None",
-".	g #FFFFFF",
+" 	c None",
+".	c #FFFFFF",
 "        ",
 "        ",
 "...     ",
