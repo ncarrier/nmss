@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include <error.h>
+#include "error.h"
 
 #include <SDL2/SDL.h>
 
