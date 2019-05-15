@@ -29,8 +29,7 @@ static void sdl_renderer_cleanup(struct SDL_Renderer **renderer) {
 	*renderer = NULL;
 }
 
-#ifdef __EMSCRIPTEN__
-static void emscripten_callback(void *data) {
+static void loop_callback(void *data) {
 	struct game *game;
 	struct SDL_Renderer *renderer;
 
@@ -41,7 +40,6 @@ static void emscripten_callback(void *data) {
 	game_update(game);
 	SDL_RenderPresent(renderer);
 }
-#endif
 
 int main(int argc, char *argv[])
 {
@@ -64,13 +62,10 @@ int main(int argc, char *argv[])
 
 	game_init(&game, renderer);
 #ifdef __EMSCRIPTEN__
-	emscripten_set_main_loop_arg(emscripten_callback, &game, 60, true);
+	emscripten_set_main_loop_arg(loop_callback, &game, 60, true);
 #else
-	while (game.input.loop) {
-		SDL_RenderClear(renderer);
-		game_update(&game);
-		SDL_RenderPresent(renderer);
-	}
+	while (game.input.loop)
+		loop_callback(&game);
 #endif
 
 	return EXIT_SUCCESS;
