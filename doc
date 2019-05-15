@@ -1,0 +1,1 @@
+convert -pointsize 16 -fill white -draw 'text 0,0 "GAME OVER" ' -gravity center -font ./04B_21__.ttf blank.xpm game_over.xpm
