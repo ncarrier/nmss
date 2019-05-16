@@ -6,3 +6,7 @@ nmss
 nmss.html
 nmss.js
 nmss.wasm
+.settings
+*.wasm.map
+*.wast
+*bug-test-case
