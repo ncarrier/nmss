@@ -15,6 +15,7 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 
 	for (i = 0; i < GAME_MAX_EXPLOSIONS; i++)
 		explosion_init(game->explosion + i, renderer);
+	score_init(&game->score, renderer);
 }
 
 static void add_alien(struct game *game) {
@@ -116,7 +117,7 @@ static void check_alien_shoot_collisions(struct game *game) {
 			alien_set_dead(alien);
 			explosion_start(find_dead_explosion(game),
 					alien_get_bounding_box(alien));
-			/* TODO increase score */
+			score_increase(&game->score);
 		}
 	}
 }
@@ -142,6 +143,7 @@ void game_update(struct game *game) {
 	update_aliens(game);
 	check_collisions(game);
 	update_explosions(game);
+	score_update(&game->score);
 }
 
 void game_cleanup(struct game *game) {

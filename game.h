@@ -6,6 +6,7 @@
 #include "alien.h"
 #include "input.h"
 #include "explosion.h"
+#include "score.h"
 
 #define GAME_MAX_ALIENS 12
 #define ALIEN_POPPING_PERIOD 30
@@ -21,6 +22,7 @@ struct game {
 	struct SDL_Renderer *renderer;
 	unsigned alien_movement;
 	struct explosion explosion[GAME_MAX_EXPLOSIONS];
+	struct score score;
 };
 
 void game_init(struct game *game, struct SDL_Renderer *renderer);
