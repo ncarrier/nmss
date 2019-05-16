@@ -22,15 +22,15 @@ void alien_init(struct alien *alien, struct SDL_Renderer *renderer,
 }
 
 void alien_update_pos(struct alien *alien) {
-	alien->object.dst.x = alien_movement_get_x(
+	alien->object.pos.x = alien_movement_get_x(
 			&alien->movement,
-			alien->object.dst.x,
-			alien->object.dst.y);
-	alien->object.dst.y = alien_movement_get_y(
+			alien->object.pos.x,
+			alien->object.pos.y);
+	alien->object.pos.y = alien_movement_get_y(
 			&alien->movement,
-			alien->object.dst.x,
-			alien->object.dst.y);
-	if (alien->object.dst.x < -SCREEN_SPRITE_WIDTH)
+			alien->object.pos.x,
+			alien->object.pos.y);
+	if (alien->object.pos.x < -SCREEN_SPRITE_WIDTH)
 		alien_set_dead(alien);
 }
 
@@ -45,7 +45,7 @@ void alien_update_flip(struct alien *alien) {
 static void alien_update_shoot(struct alien *alien) {
 	if (shoot_is_dead(&alien->shoot)) {
 		if (random() % 40 == 0)
-			shoot_shoot(&alien->shoot, &alien->object.dst);
+			shoot_shoot(&alien->shoot, &alien->object.pos);
 	} else {
 		shoot_update(&alien->shoot);
 	}
@@ -69,7 +69,7 @@ void alien_set_dead(struct alien *alien)
 }
 
 bool alien_collides(const struct alien *alien, const struct SDL_Rect *rect) {
-	return SDL_HasIntersection(&alien->object.dst, rect);
+	return SDL_HasIntersection(&alien->object.pos, rect);
 }
 
 bool alien_shoot_collides(const struct alien *alien,
@@ -84,7 +84,7 @@ void alien_shoot_set_dead(struct alien *alien)
 }
 
 const struct SDL_Rect *alien_get_bounding_box(const struct alien *alien) {
-	return &alien->object.dst;
+	return &alien->object.pos;
 }
 
 void alien_cleanup(struct alien *alien) {

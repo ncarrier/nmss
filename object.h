@@ -6,7 +6,7 @@
 struct object {
 	struct SDL_Texture *texture;
 	struct SDL_Renderer *renderer;
-	struct SDL_Rect dst;
+	struct SDL_Rect pos;
 	SDL_RendererFlip flip;
 };
 

@@ -20,8 +20,8 @@ void shoot_update(struct shoot *shoot) {
 		return;
 
 	object_render(&shoot->object);
-	shoot->object.dst.x += shoot->increment;
-	if (shoot->object.dst.x > SCREEN_WIDTH)
+	shoot->object.pos.x += shoot->increment;
+	if (shoot->object.pos.x > SCREEN_WIDTH)
 		shoot_set_dead(shoot, true);
 }
 
@@ -37,7 +37,7 @@ void shoot_set_dead(struct shoot *shoot, bool dead)
 
 bool shoot_collides(const struct shoot *shoot, const struct SDL_Rect *rect) {
 	return !shoot_is_dead(shoot) &&
-			SDL_HasIntersection(&shoot->object.dst, rect);
+			SDL_HasIntersection(&shoot->object.pos, rect);
 }
 
 void shoot_cleanup(struct shoot *shoot)
