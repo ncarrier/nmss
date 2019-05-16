@@ -6,14 +6,7 @@
 
 #include "object.h"
 #include "screen.h"
-
-static void sdl_surface_cleanup(struct SDL_Surface **surface) {
-	if (surface == NULL || *surface == NULL)
-		return;
-
-	SDL_FreeSurface(*surface);
-	*surface = NULL;
-}
+#include "utils.h"
 
 void object_init(struct object *object, struct SDL_Renderer *renderer,
 		const struct SDL_Rect *rect, char *image[]) {
