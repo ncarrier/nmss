@@ -48,6 +48,9 @@ int main(int argc, char *argv[])
 	int ret;
 	struct game __attribute__((cleanup(game_cleanup))) game;
 
+#ifdef SDL_MAIN_HANDLED
+	SDL_SetMainReady();
+#endif
 	ret = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	if (ret != 0)
 		error(EXIT_FAILURE, 0, "SDL_Init: %s", SDL_GetError());
