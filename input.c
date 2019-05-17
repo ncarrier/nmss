@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "input.h"
 
 void input_init(struct input *input)
