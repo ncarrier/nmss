@@ -11,3 +11,5 @@ nmss.wasm
 *.wast
 *bug-test-case
 nmss.exe
+win_root
+third_party
