@@ -10,3 +10,4 @@ nmss.wasm
 *.wasm.map
 *.wast
 *bug-test-case
+nmss.exe
