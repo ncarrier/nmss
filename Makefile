@@ -8,7 +8,7 @@ nmss:*.c *.h res/*.xpm
 		$(WARNINGS) $(OPTIMIZATION)
 
 nmss.exe:*.c *.h
-	i686-w64-mingw32-gcc *.c -o nmss.exe \
+	x86_64-w64-mingw32-gcc *.c -o nmss.exe \
 		-Iwin_root/include/ -Drandom=rand -DSDL_MAIN_HANDLED \
 		-lSDL2 -lSDL2_image -L win_root/lib/ \
 		$(WARNINGS) $(OPTIMIZATION)
