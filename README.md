@@ -6,6 +6,12 @@ It's intendend for running on an 256x64 screen for an embedded product, hence
 the small size of the window.
 It runs on Linux, Windows and in a web browser.
 
+![screenshot](screenshot.png)
+
+(And yes, it's tiny.)
+
+All the instructions are tested under debian stable (Stretch as of writing).
+
 ## Required tools for compilation
 
 ### For linux
@@ -22,24 +28,26 @@ As the root user:
 
 As a normal user:
 
-    mkdir third_party
+    mkdir -p third_party
     cd third_party
     wget https://www.libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
     tar xf SDL2-devel*.tar.gz
     wget https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.4-mingw.tar.gz
     tar xf SDL2_image-devel*.tar.gz
     cd -
-    mkdir win_root
+    mkdir -p win_root
     make -C third_party/SDL2-2.0.9/ install-package arch=x86_64-w64-mingw32 prefix=${PWD}/win_root
     make -C third_party/SDL2_image-2.0.4/ install-package arch=x86_64-w64-mingw32 prefix=${PWD}/win_root
 
 ## For the web browser version (Emscripten)
 
-TODO
+    mkdir -p third_party
+    git clone https://github.com/emscripten-core/emsdk.git
+    ./emsdk install latest
+    ./emsdk activate latest
+    source ./emsdk_env.sh
 
 ## Build
-
-Instructions are tested under debian stable (Stretch as of writing).
 
 ### For Linux
 
@@ -52,6 +60,8 @@ Instructions are tested under debian stable (Stretch as of writing).
 ### For the web browser version
 
     make nmss.html
+
+Get sure that **emsdk_env.sh** has been properly sourced beforehand.
 
 ## Running
 
@@ -74,5 +84,5 @@ For running on Windows directly, I don't know ^^
 
 ## How to play
 
-Use the arrows to move the ship and the A key to shoot at the aliens.
+Use the arrows to move the ship and the `A` key to shoot at the aliens.
 
