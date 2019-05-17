@@ -34,6 +34,11 @@ void score_update(struct score *score)
 	pos.y = 56;
 	pos.x = 247;
 
+	if (score->value == 0) {
+		sub.x = 0;
+		SDL_RenderCopy(score->renderer, score->texture, &sub, &pos);
+	}
+
 	for (value = score->value; value != 0; value /= 10) {
 		digit = value % 10;
 		sub.x = digit * 6;
