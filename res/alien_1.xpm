@@ -1,5 +1,5 @@
 /* XPM */
-static char * alien_xpm[] = {
+static char * alien_1_xpm[] = {
 "8 8 2 1",
 " 	g None",
 ".	g #FFFFFF",
