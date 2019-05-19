@@ -12,4 +12,6 @@
 
 void sdl_surface_cleanup(struct SDL_Surface **surface);
 
+typedef char *image[];
+
 #endif /* UTILS_H_ */

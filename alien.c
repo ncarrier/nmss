@@ -13,9 +13,7 @@
 #include "res/alien_8.xpm"
 #include "res/alien_9.xpm"
 
-typedef char *alien_image[];
-
-static alien_image *alien_images[] = {
+static image *alien_image[] = {
 		&alien_0_xpm,
 		&alien_1_xpm,
 		&alien_2_xpm,
@@ -40,7 +38,7 @@ static const struct SDL_Rect alien_init_pos = {
 void alien_init(struct alien *alien, struct SDL_Renderer *renderer,
 		int movement, unsigned alien_index) {
 	object_init(&alien->object, renderer, &alien_init_pos,
-			*(alien_images[movement % ARRAY_SIZE(alien_images)]));
+			*(alien_image[movement % ARRAY_SIZE(alien_image)]));
 	alien->dead = false;
 	alien->flip_counter = ALIEN_FLIP_PERIOD;
 	alien_movement_init(&alien->movement, movement, alien_index);
