@@ -41,11 +41,8 @@ static void handle_key(struct input *input, bool down)
 		break;
 
 	case SDLK_SPACE:
-		input->select_down = down;
-		break;
-
-	case SDLK_RETURN:
-		input->start_down = down;
+		if (down)
+			input->pause = !input->pause;
 		break;
 
 	case SDLK_UP:

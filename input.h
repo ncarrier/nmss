@@ -13,6 +13,7 @@
 
 struct input {
 	bool loop;
+	bool pause;
 	bool a_down;
 	bool b_down;
 	bool down_down;

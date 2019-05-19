@@ -137,6 +137,8 @@ static void update_explosions(struct game *game) {
 
 void game_update(struct game *game) {
 	input_update(&game->input);
+	if (game->input.pause)
+		return;
 	ship_update(&game->ship, &game->input);
 	if (!ship_is_dead(&game->ship))
 		spawn_aliens(game);
