@@ -1,5 +1,6 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
+#include <stdbool.h>
 
 #include "object.h"
 
@@ -35,11 +36,13 @@ enum message_id {
 
 struct message {
 	struct object object;
+	unsigned pause_duration;
 };
 
 void message_init(struct message *message, struct SDL_Renderer *renderer,
 		enum message_id id);
 void message_update(struct message *message);
+bool message_is_dead(const struct message *message);
 void message_cleanup(struct message *message);
 
 #endif /* MESSAGE_H_ */

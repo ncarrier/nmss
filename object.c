@@ -13,8 +13,12 @@ void object_init(struct object *object, struct SDL_Renderer *renderer,
 	struct SDL_Surface __attribute__((cleanup(sdl_surface_cleanup)))*surface = NULL;
 
 	object->renderer = renderer;
-	if (rect != NULL)
+	if (rect != NULL) {
 		object->pos = *rect;
+	} else {
+		object->pos.w = SCREEN_SPRITE_WIDTH;
+		object->pos.h = SCREEN_SPRITE_HEIGHT;
+	}
 	object->flip = SDL_FLIP_NONE;
 	surface = IMG_ReadXPMFromArray(image);
 	if (surface == NULL)
@@ -23,8 +27,6 @@ void object_init(struct object *object, struct SDL_Renderer *renderer,
 	object->texture = SDL_CreateTextureFromSurface(object->renderer, surface);
 	if (object->texture == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateTexture: %s", SDL_GetError());
-	object->pos.w = SCREEN_SPRITE_WIDTH;
-	object->pos.h = SCREEN_SPRITE_HEIGHT;
 }
 
 void object_set_pos(struct object *object, const struct SDL_Rect *rect) {

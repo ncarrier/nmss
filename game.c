@@ -16,6 +16,8 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 	for (i = 0; i < GAME_MAX_EXPLOSIONS; i++)
 		explosion_init(game->explosion + i, renderer);
 	score_init(&game->score, renderer);
+
+	message_init(&game->message, renderer, MESSAGE_ID_READY);
 }
 
 static void add_alien(struct game *game) {
@@ -140,10 +142,14 @@ void game_update(struct game *game) {
 	if (game->input.pause)
 		return;
 	ship_update(&game->ship, &game->input);
-	if (!ship_is_dead(&game->ship))
-		spawn_aliens(game);
-	update_aliens(game);
-	check_collisions(game);
+	if (message_is_dead(&game->message)) {
+		if (!ship_is_dead(&game->ship))
+			spawn_aliens(game);
+		update_aliens(game);
+		check_collisions(game);
+	} else {
+		message_update(&game->message);
+	}
 	update_explosions(game);
 	score_update(&game->score);
 }
@@ -151,6 +157,7 @@ void game_update(struct game *game) {
 void game_cleanup(struct game *game) {
 	unsigned i;
 
+	message_cleanup(&game->message);
 	for (i = 0; i < game->nb_aliens; i++)
 		alien_cleanup(game->alien + i);
 	input_cleanup(&game->input);
