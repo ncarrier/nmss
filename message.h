@@ -37,6 +37,7 @@ enum message_id {
 struct message {
 	struct object object;
 	unsigned pause_duration;
+	enum message_id id;
 };
 
 void message_init(struct message *message, struct SDL_Renderer *renderer,
