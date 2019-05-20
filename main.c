@@ -12,6 +12,7 @@
 
 #include "input.h"
 #include "game.h"
+#include "screen.h"
 
 static void sdl_window_cleanup(struct SDL_Window **window) {
 	if (window == NULL || *window == NULL)
@@ -56,12 +57,13 @@ int main(int argc, char *argv[])
 		error(EXIT_FAILURE, 0, "SDL_Init: %s", SDL_GetError());
 	atexit(SDL_Quit);
 	window = SDL_CreateWindow("nmss", SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED, 256, 64, SDL_WINDOW_SHOWN);
+			SDL_WINDOWPOS_UNDEFINED, 256, 64, SDL_WINDOW_RESIZABLE);
 	if (window == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateWindow: %s", SDL_GetError());
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateRenderer: %s", SDL_GetError());
+	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	game_init(&game, renderer);
 #ifdef __EMSCRIPTEN__
