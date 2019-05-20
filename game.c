@@ -95,14 +95,16 @@ static void check_alien_ship_collisions(struct game *game) {
 					alien_get_bounding_box(alien));
 			explosion_start(find_dead_explosion(game),
 					ship_get_bounding_box(&game->ship));
-			/* TODO add game over screen */
+			message_init(&game->message, game->renderer,
+					MESSAGE_ID_LOOSER);
 		}
 		if (alien_shoot_collides(alien, ship_bb)) {
 			ship_set_dead(&game->ship);
 			alien_shoot_set_dead(alien);
 			explosion_start(find_dead_explosion(game),
 					ship_get_bounding_box(&game->ship));
-			/* TODO add game over screen */
+			message_init(&game->message, game->renderer,
+					MESSAGE_ID_LOOSER);
 		}
 	}
 }
@@ -138,6 +140,8 @@ static void update_explosions(struct game *game) {
 }
 
 void game_update(struct game *game) {
+	enum message_id id;
+
 	input_update(&game->input);
 	if (game->input.pause)
 		return;
@@ -148,7 +152,11 @@ void game_update(struct game *game) {
 		update_aliens(game);
 		check_collisions(game);
 	} else {
+		id = game->message.id;
 		message_update(&game->message);
+		/* TODO replace with some way to restart the game */
+		if (message_is_dead(&game->message) && id == MESSAGE_ID_LOOSER)
+			game->input.loop = false;
 	}
 	update_explosions(game);
 	score_update(&game->score);
