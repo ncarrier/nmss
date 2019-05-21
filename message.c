@@ -48,6 +48,11 @@ bool message_is_dead(const struct message *message) {
 	return message->pause_duration == 0;
 }
 
+enum message_id message_random_taunt(void)
+{
+	return random_in_range(MESSAGE_ID_AIM_DAMMIT, MESSAGE_ID_ALIEN_LAUGHING);
+}
+
 void message_cleanup(struct message *message) {
 	object_cleanup(&message->object);
 	memset(message, 0, sizeof(*message));

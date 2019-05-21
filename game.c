@@ -18,6 +18,8 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 	score_init(&game->score, renderer);
 
 	message_init(&game->message, renderer, MESSAGE_ID_READY);
+	game->current_praise = MESSAGE_ID_NOT_THAT_BAD;
+	game->current_aliens_killed = 0;
 }
 
 static void add_alien(struct game *game) {
@@ -48,7 +50,26 @@ static void update_aliens(struct game *game) {
 			i++;
 	}
 }
+
 static void spawn_aliens(struct game *game) {
+	if (game->spawned_aliens == GAME_MAX_ALIENS) {
+		if (game->nb_aliens != 0)
+			return;
+
+		/* start spawning next alien wave */
+		game->spawned_aliens = 0;
+		if (game->current_aliens_killed == GAME_MAX_ALIENS) {
+			message_init(&game->message, game->renderer,
+					game->current_praise);
+			if (game->current_praise != MESSAGE_ID_LIKE_A_GOD)
+				game->current_praise++;
+		} else {
+			message_init(&game->message, game->renderer,
+					message_random_taunt());
+			game->current_praise = MESSAGE_ID_NOT_THAT_BAD;
+		}
+		game->current_aliens_killed = 0;
+	}
 	if (game->alien_popping_period > 0) {
 		game->alien_popping_period--;
 	} else {
@@ -58,11 +79,9 @@ static void spawn_aliens(struct game *game) {
 		}
 		game->alien_popping_period = ALIEN_POPPING_PERIOD;
 		if (game->spawned_aliens == GAME_MAX_ALIENS) {
-			game->alien_popping_period *= 10;
 			game->alien_movement++;
 			if (game->alien_movement == alien_movement_get_nb())
 				game->alien_movement = 0;
-			game->spawned_aliens = 0;
 		}
 	}
 }
@@ -122,6 +141,7 @@ static void check_alien_shoot_collisions(struct game *game) {
 			explosion_start(find_dead_explosion(game),
 					alien_get_bounding_box(alien));
 			score_increase(&game->score);
+			game->current_aliens_killed++;
 		}
 	}
 }

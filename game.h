@@ -16,6 +16,7 @@
 struct game {
 	struct ship ship;
 	unsigned alien_popping_period;
+	bool all_aliens_dead;
 	struct alien alien[GAME_MAX_ALIENS];
 	unsigned nb_aliens;
 	unsigned spawned_aliens;
@@ -25,6 +26,9 @@ struct game {
 	struct explosion explosion[GAME_MAX_EXPLOSIONS];
 	struct score score;
 	struct message message;
+	/* in what follows, current stands for "in the current wave" */
+	enum message_id current_praise;
+	unsigned current_aliens_killed;
 };
 
 void game_init(struct game *game, struct SDL_Renderer *renderer);

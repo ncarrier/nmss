@@ -14,4 +14,6 @@ void sdl_surface_cleanup(struct SDL_Surface **surface);
 
 typedef char *image[];
 
+long random_in_range(long int lower, long int upper);
+
 #endif /* UTILS_H_ */

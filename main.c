@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -49,6 +51,7 @@ int main(int argc, char *argv[])
 	int ret;
 	struct game __attribute__((cleanup(game_cleanup))) game;
 
+	srand(time(NULL));
 #ifdef SDL_MAIN_HANDLED
 	SDL_SetMainReady();
 #endif

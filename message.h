@@ -44,6 +44,7 @@ void message_init(struct message *message, struct SDL_Renderer *renderer,
 		enum message_id id);
 void message_update(struct message *message);
 bool message_is_dead(const struct message *message);
+enum message_id message_random_taunt(void);
 void message_cleanup(struct message *message);
 
 #endif /* MESSAGE_H_ */
