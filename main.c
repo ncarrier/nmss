@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
 			SDL_WINDOWPOS_UNDEFINED, 256, 64, SDL_WINDOW_RESIZABLE);
 	if (window == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateWindow: %s", SDL_GetError());
+	SDL_ShowCursor(SDL_DISABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == NULL)
 		error(EXIT_FAILURE, 0, "SDL_CreateRenderer: %s", SDL_GetError());
