@@ -11,6 +11,7 @@
 #endif
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "input.h"
 #include "game.h"
@@ -39,6 +40,7 @@ static void loop_callback(void *data) {
 	game = data;
 	renderer = game->renderer;
 
+	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(renderer);
 	game_update(game);
 	SDL_RenderPresent(renderer);

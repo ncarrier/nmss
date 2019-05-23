@@ -8,6 +8,7 @@
 #include "explosion.h"
 #include "score.h"
 #include "message.h"
+#include "walls.h"
 
 #define GAME_MAX_ALIENS 12
 #define ALIEN_POPPING_PERIOD 30
@@ -29,6 +30,7 @@ struct game {
 	/* in what follows, current stands for "in the current wave" */
 	enum message_id current_praise;
 	unsigned current_aliens_killed;
+	struct walls walls;
 };
 
 void game_init(struct game *game, struct SDL_Renderer *renderer);
