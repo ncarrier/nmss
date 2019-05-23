@@ -59,6 +59,8 @@ int main(int argc, char *argv[])
 	if (ret != 0)
 		error(EXIT_FAILURE, 0, "SDL_Init: %s", SDL_GetError());
 	atexit(SDL_Quit);
+	/* no need for calling IMG_Init as SDL_image does auto lazy loading */
+	atexit(IMG_Quit);
 	window = SDL_CreateWindow("nmss", SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED, 256, 64, SDL_WINDOW_RESIZABLE);
 	if (window == NULL)
