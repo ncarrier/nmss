@@ -53,22 +53,23 @@ static void handle_key(struct input *input, bool down)
 
 void input_update(struct input *input)
 {
-	if (SDL_PollEvent(&input->event) == 0)
-		return;
+	while (true) {
+		if (SDL_PollEvent(&input->event) == 0)
+			return;
 
-	switch (input->event.type) {
-	case SDL_QUIT: {
-		printf("see u.\n");
-		input->loop = false;
-		break;
+		switch (input->event.type) {
+		case SDL_QUIT: {
+			printf("see u.\n");
+			input->loop = false;
+			break;
+		}
+
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			handle_key(input, input->event.type == SDL_KEYDOWN);
+			break;
+		}
 	}
-
-	case SDL_KEYDOWN:
-	case SDL_KEYUP:
-		handle_key(input, input->event.type == SDL_KEYDOWN);
-		break;
-	}
-
 }
 
 void input_cleanup(struct input *input)
