@@ -1,4 +1,4 @@
-WARNINGS := -Werror -Wall -Wextra -Wno-unused-parameter
+WARNINGS := -Wall -Wextra -Wno-unused-parameter
 OPTIMIZATION := -O3
 
 all: nmss nmss.exe nmss.html
