@@ -59,7 +59,7 @@ static int mvt_y_5(struct alien_movement *mvt, int x, int y) {
 }
 
 static int mvt_x_6(struct alien_movement *mvt, int x, int y) {
-	int increment[] = {2, 0, -1, 0};
+	int increment[] = {2, 0, 1, 0};
 	int phase;
 
 	phase = (mvt->t / 30) % 4;
@@ -73,10 +73,12 @@ static int mvt_y_6(struct alien_movement *mvt, int x, int y) {
 
 	phase = (mvt->t / 30) % 4;
 
-	if (mvt->t == 0)
+	if (mvt->t == 0) {
+		mvt->data = (random() % 2) * 2 - 1;
 		return random() % (SCREEN_HEIGHT - 8);
+	}
 
-	return y - increment[phase];
+	return y - mvt->data * increment[phase];
 }
 
 static int mvt_x_7(struct alien_movement *mvt, int x, int y) {
