@@ -21,6 +21,7 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 	game->current_praise = MESSAGE_ID_NOT_THAT_BAD;
 	game->current_aliens_killed = 0;
 	walls_init(&game->walls, renderer);
+	stars_init(&game->stars, renderer);
 }
 
 static void add_alien(struct game *game) {
@@ -166,6 +167,7 @@ void game_update(struct game *game) {
 	input_update(&game->input);
 	if (game->input.pause)
 		return;
+	stars_update(&game->stars);
 	walls_update(&game->walls);
 	ship_update(&game->ship, &game->input);
 	if (message_is_dead(&game->message)) {
@@ -187,6 +189,7 @@ void game_update(struct game *game) {
 void game_cleanup(struct game *game) {
 	unsigned i;
 
+	stars_cleanup(&game->stars);
 	walls_cleanup(&game->walls);
 	message_cleanup(&game->message);
 	for (i = 0; i < game->nb_aliens; i++)
