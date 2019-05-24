@@ -32,6 +32,8 @@ void stars_update(struct stars *stars)
 
 	for (i = 0; i < STARS_NB; i++) {
 		star = stars->stars + i;
+		if (star->point.x % 40 == 0)
+			star->luminance = random_in_range(20, 128);
 		SDL_SetRenderDrawColor(stars->renderer, star->luminance,
 				star->luminance, star->luminance,
 				SDL_ALPHA_OPAQUE);
