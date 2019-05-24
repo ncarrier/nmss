@@ -164,11 +164,11 @@ static void update_explosions(struct game *game) {
 void game_update(struct game *game) {
 	enum message_id id;
 
+	stars_update(&game->stars);
+	walls_update(&game->walls);
 	input_update(&game->input);
 	if (game->input.pause)
 		return;
-	stars_update(&game->stars);
-	walls_update(&game->walls);
 	ship_update(&game->ship, &game->input);
 	if (message_is_dead(&game->message)) {
 		if (!ship_is_dead(&game->ship))
