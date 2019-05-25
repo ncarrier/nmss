@@ -10,6 +10,7 @@
 #include "message.h"
 #include "walls.h"
 #include "stars.h"
+#include "meteors.h"
 
 #define GAME_MAX_ALIENS 12
 #define ALIEN_POPPING_PERIOD 30
@@ -33,6 +34,7 @@ struct game {
 	unsigned current_aliens_killed;
 	struct walls walls;
 	struct stars stars;
+	struct meteors meteors;
 };
 
 void game_init(struct game *game, struct SDL_Renderer *renderer);

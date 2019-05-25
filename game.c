@@ -22,6 +22,7 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 	game->current_aliens_killed = 0;
 	walls_init(&game->walls, renderer);
 	stars_init(&game->stars, renderer);
+	meteors_init(&game->meteors, renderer);
 }
 
 static void add_alien(struct game *game) {
@@ -82,8 +83,10 @@ static void spawn_aliens(struct game *game) {
 		game->alien_popping_period = ALIEN_POPPING_PERIOD;
 		if (game->spawned_aliens == GAME_MAX_ALIENS) {
 			game->alien_movement++;
-			if (game->alien_movement == alien_movement_get_nb())
+			if (game->alien_movement == alien_movement_get_nb()) {
 				game->alien_movement = 0;
+				meteors_add(&game->meteors);
+			}
 		}
 	}
 }
@@ -140,11 +143,40 @@ static void check_alien_shoot_collisions(struct game *game) {
 		alien_bb = alien_get_bounding_box(alien);
 		if (ship_shoot_hits(&game->ship, alien_bb)) {
 			alien_set_dead(alien);
-			explosion_start(find_dead_explosion(game),
-					alien_get_bounding_box(alien));
+			explosion_start(find_dead_explosion(game), alien_bb);
 			score_increase(&game->score);
 			game->current_aliens_killed++;
 		}
+	}
+}
+
+static void check_meteor_collisions(struct game *game)
+{
+	unsigned i;
+	struct meteor *meteor;
+	const struct SDL_Rect *ship_bb;
+
+	for (i = 0; i < meteors_get_nb(&game->meteors); i++) {
+		meteor = meteors_get(&game->meteors, i);
+		ship_bb = ship_get_bounding_box(&game->ship);
+
+		if (meteor_collides(meteor, ship_bb)) {
+			meteor_set_dead(meteor);
+			ship_set_dead(&game->ship);
+			explosion_start(find_dead_explosion(game),
+					ship_get_bounding_box(&game->ship));
+		}
+	}
+}
+
+static void check_meteor_shoot_collisions(struct game *game)
+{
+	unsigned i;
+	struct meteor *meteor;
+
+	for (i = 0; i < meteors_get_nb(&game->meteors); i++) {
+		meteor = meteors_get(&game->meteors, i);
+		ship_shoot_hits(&game->ship, &meteor->object.pos);
 	}
 }
 
@@ -152,6 +184,8 @@ static void check_collisions(struct game *game) {
 	if (!ship_is_dead(&game->ship))
 		check_alien_ship_collisions(game);
 	check_alien_shoot_collisions(game);
+	check_meteor_collisions(game);
+	check_meteor_shoot_collisions(game);
 }
 
 static void update_explosions(struct game *game) {
@@ -170,6 +204,8 @@ void game_update(struct game *game) {
 	if (game->input.pause)
 		return;
 	ship_update(&game->ship, &game->input);
+	if (game->message.id > MESSAGE_ID_GO || message_is_dead(&game->message))
+		meteors_update(&game->meteors);
 	if (message_is_dead(&game->message)) {
 		if (!ship_is_dead(&game->ship))
 			spawn_aliens(game);
@@ -179,8 +215,10 @@ void game_update(struct game *game) {
 		id = game->message.id;
 		message_update(&game->message);
 		/* TODO replace with some way to restart the game */
-		if (message_is_dead(&game->message) && id == MESSAGE_ID_LOOSER)
+		if (message_is_dead(&game->message) && id == MESSAGE_ID_LOOSER) {
 			game->input.loop = false;
+			printf("Final score %u\n", game->score.value);
+		}
 	}
 	update_explosions(game);
 	score_update(&game->score);
@@ -189,6 +227,7 @@ void game_update(struct game *game) {
 void game_cleanup(struct game *game) {
 	unsigned i;
 
+	meteors_cleanup(&game->meteors);
 	stars_cleanup(&game->stars);
 	walls_cleanup(&game->walls);
 	message_cleanup(&game->message);

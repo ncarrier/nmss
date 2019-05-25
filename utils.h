@@ -16,4 +16,9 @@ typedef char *image[];
 
 long random_in_range(long int lower, long int upper);
 
+struct double_point {
+	double x;
+	double y;
+};
+
 #endif /* UTILS_H_ */
