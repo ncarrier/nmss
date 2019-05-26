@@ -2,7 +2,8 @@
 #include "alien_movement.h"
 #include "explosion.h"
 
-void game_init(struct game *game, struct SDL_Renderer *renderer) {
+void game_init(struct game *game, struct SDL_Renderer *renderer,
+		struct SDL_Window *window) {
 	unsigned i;
 
 	ship_init(&game->ship, renderer);
@@ -11,7 +12,7 @@ void game_init(struct game *game, struct SDL_Renderer *renderer) {
 	game->renderer = renderer;
 	game->alien_movement = 0;
 	game->spawned_aliens = 0;
-	input_init(&game->input);
+	input_init(&game->input, window);
 
 	for (i = 0; i < GAME_MAX_EXPLOSIONS; i++)
 		explosion_init(game->explosion + i, renderer);

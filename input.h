@@ -22,10 +22,12 @@ struct input {
 	bool select_down;
 	bool start_down;
 	bool up_down;
+	bool fullscreen;
 	union SDL_Event event;
+	struct SDL_Window *window;
 };
 
-void input_init(struct input *input);
+void input_init(struct input *input, struct SDL_Window *window);
 void input_update(struct input *input);
 void input_cleanup(struct input *input);
 

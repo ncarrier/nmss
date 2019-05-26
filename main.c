@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 		error(EXIT_FAILURE, 0, "SDL_CreateRenderer: %s", SDL_GetError());
 	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	game_init(&game, renderer);
+	game_init(&game, renderer, window);
 #ifdef __EMSCRIPTEN__
 	emscripten_set_main_loop_arg(loop_callback, &game, 60, true);
 #else

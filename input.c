@@ -2,7 +2,7 @@
 
 #include "input.h"
 
-void input_init(struct input *input)
+void input_init(struct input *input, struct SDL_Window *window)
 {
 	*input = (struct input) {
 		.loop = true,
@@ -14,6 +14,8 @@ void input_init(struct input *input)
 		.select_down = false,
 		.start_down = false,
 		.up_down = false,
+		.fullscreen = false,
+		.window = window,
 	};
 }
 
@@ -26,6 +28,14 @@ static void handle_key(struct input *input, bool down)
 
 	case SDLK_b:
 		input->b_down = down;
+		break;
+
+	case SDLK_f:
+		if (down)
+			input->fullscreen = true;
+		if (input->fullscreen)
+			SDL_SetWindowFullscreen(input->window,
+					SDL_WINDOW_FULLSCREEN_DESKTOP);
 		break;
 
 	case SDLK_DOWN:

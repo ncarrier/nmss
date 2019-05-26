@@ -37,7 +37,8 @@ struct game {
 	struct meteors meteors;
 };
 
-void game_init(struct game *game, struct SDL_Renderer *renderer);
+void game_init(struct game *game, struct SDL_Renderer *renderer,
+		struct SDL_Window *window);
 void game_update(struct game *game);
 void game_cleanup(struct game *game);
 
