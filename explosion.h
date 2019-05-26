@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #include "object.h"
 
@@ -11,6 +12,7 @@ struct explosion {
 	struct object explode_2;
 	struct object explode_3;
 	unsigned phase;
+	Mix_Chunk *sound;
 };
 
 void explosion_init(struct explosion *explosion, struct SDL_Renderer *renderer);

@@ -6,6 +6,7 @@
 void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,
 		int increment) {
 	object_init(&shoot->object, renderer, NULL, shoot_xpm);
+	shoot->sound = Mix_LoadWAV("res/sfx/shoot.wav");
 	shoot_set_dead(shoot, true);
 	shoot->increment = increment;
 }
@@ -13,6 +14,7 @@ void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,
 void shoot_shoot(struct shoot *shoot, const struct SDL_Rect *rect) {
 	shoot_set_dead(shoot, false);
 	object_set_pos(&shoot->object, rect);
+	Mix_PlayChannel(1, shoot->sound, 0);
 }
 
 void shoot_update(struct shoot *shoot) {
@@ -42,5 +44,6 @@ bool shoot_collides(const struct shoot *shoot, const struct SDL_Rect *rect) {
 
 void shoot_cleanup(struct shoot *shoot)
 {
+	Mix_FreeChunk(shoot->sound);
 	object_cleanup(&shoot->object);
 }

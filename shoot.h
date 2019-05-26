@@ -2,12 +2,15 @@
 #define SHOOT_H_
 #include <stdbool.h>
 
+#include <SDL2/SDL_mixer.h>
+
 #include "object.h"
 
 struct shoot {
 	struct object object;
 	bool dead;
 	int increment;
+	Mix_Chunk *sound;
 };
 
 void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,

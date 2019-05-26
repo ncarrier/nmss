@@ -6,7 +6,8 @@ PKG_CONFIG ?= pkg-config
 all: nmss nmss.exe nmss.html
 
 nmss:*.c *.h res/*.xpm
-	$(CC) *.c -o nmss `$(PKG_CONFIG) sdl2 SDL2_image --cflags --libs` -lm \
+	$(CC) *.c -o nmss \
+		`$(PKG_CONFIG) sdl2 SDL2_image SDL2_mixer --cflags --libs` -lm \
 		$(WARNINGS) $(OPTIMIZATION)
 
 nmss.exe:*.c *.h

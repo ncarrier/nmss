@@ -12,6 +12,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 
 #include "input.h"
 #include "game.h"
@@ -57,10 +58,17 @@ int main(int argc, char *argv[])
 #ifdef SDL_MAIN_HANDLED
 	SDL_SetMainReady();
 #endif
-	ret = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+	ret = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO);
 	if (ret != 0)
 		error(EXIT_FAILURE, 0, "SDL_Init: %s", SDL_GetError());
 	atexit(SDL_Quit);
+	ret = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS,
+			1024);
+	if (ret != 0)
+		error(EXIT_FAILURE, 0, "Mix_OpenAudio: %s", Mix_GetError());
+	atexit(Mix_CloseAudio);
+	Mix_AllocateChannels(10);
+	Mix_Volume(1, MIX_MAX_VOLUME / 2);
 	/* no need for calling IMG_Init as SDL_image does auto lazy loading */
 	atexit(IMG_Quit);
 	window = SDL_CreateWindow("nmss", SDL_WINDOWPOS_UNDEFINED,
