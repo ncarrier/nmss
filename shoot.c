@@ -14,7 +14,7 @@ void shoot_init(struct shoot *shoot, struct SDL_Renderer *renderer,
 void shoot_shoot(struct shoot *shoot, const struct SDL_Rect *rect) {
 	shoot_set_dead(shoot, false);
 	object_set_pos(&shoot->object, rect);
-	Mix_PlayChannel(1, shoot->sound, 0);
+	Mix_PlayChannel(2, shoot->sound, 0);
 }
 
 void shoot_update(struct shoot *shoot) {

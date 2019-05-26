@@ -28,6 +28,9 @@ void game_init(struct game *game, struct SDL_Renderer *renderer,
 	stars_init(&game->stars, renderer);
 	meteors_init(&game->meteors, renderer);
 	game->next_time = SDL_GetTicks() + TICK_INTERVAL;
+	game->music = Mix_LoadMUS(
+			"res/music/Julius_Nox_-_Giulio_s_Page_-_Tortoise.mp3");
+	Mix_PlayMusic(game->music, -1);
 }
 
 static void add_alien(struct game *game) {
@@ -121,9 +124,11 @@ static void check_alien_ship_collisions(struct game *game) {
 			ship_set_dead(&game->ship);
 			alien_set_dead(alien);
 			explosion_start(find_dead_explosion(game),
-					alien_get_bounding_box(alien));
+					alien_get_bounding_box(alien),
+					EXPLOSION_TYPE_ALIEN);
 			explosion_start(find_dead_explosion(game),
-					ship_get_bounding_box(&game->ship));
+					ship_get_bounding_box(&game->ship),
+					EXPLOSION_TYPE_NONE);
 			message_init(&game->message, game->renderer,
 					MESSAGE_ID_LOOSER);
 		}
@@ -131,7 +136,8 @@ static void check_alien_ship_collisions(struct game *game) {
 			ship_set_dead(&game->ship);
 			alien_shoot_set_dead(alien);
 			explosion_start(find_dead_explosion(game),
-					ship_get_bounding_box(&game->ship));
+					ship_get_bounding_box(&game->ship),
+					EXPLOSION_TYPE_ALIEN);
 			message_init(&game->message, game->renderer,
 					MESSAGE_ID_LOOSER);
 		}
@@ -148,7 +154,8 @@ static void check_alien_shoot_collisions(struct game *game) {
 		alien_bb = alien_get_bounding_box(alien);
 		if (ship_shoot_hits(&game->ship, alien_bb)) {
 			alien_set_dead(alien);
-			explosion_start(find_dead_explosion(game), alien_bb);
+			explosion_start(find_dead_explosion(game), alien_bb,
+					EXPLOSION_TYPE_ALIEN);
 			score_increase(&game->score, 1);
 			game->current_aliens_killed++;
 		}
@@ -169,7 +176,8 @@ static void check_meteor_collisions(struct game *game)
 			meteor_hit(meteor);
 			ship_set_dead(&game->ship);
 			explosion_start(find_dead_explosion(game),
-					ship_get_bounding_box(&game->ship));
+					ship_get_bounding_box(&game->ship),
+					EXPLOSION_TYPE_ALIEN);
 			message_init(&game->message, game->renderer,
 					MESSAGE_ID_LOOSER);
 		}
@@ -189,7 +197,8 @@ static void check_meteor_shoot_collisions(struct game *game)
 			meteor_hit(meteor);
 			if (meteor_is_dead(meteor)) {
 				explosion_start(find_dead_explosion(game),
-						&meteor->object.pos);
+						&meteor->object.pos,
+						EXPLOSION_TYPE_METEOR);
 				score_increase(&game->score, 3);
 			}
 		}
@@ -272,6 +281,8 @@ void game_update(struct game *game) {
 void game_cleanup(struct game *game) {
 	unsigned i;
 
+	Mix_PauseMusic();
+	Mix_FreeMusic(game->music);
 	meteors_cleanup(&game->meteors);
 	stars_cleanup(&game->stars);
 	walls_cleanup(&game->walls);

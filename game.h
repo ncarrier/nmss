@@ -1,6 +1,7 @@
 #ifndef GAME_H_
 #define GAME_H_
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #include "ship.h"
 #include "alien.h"
@@ -37,6 +38,7 @@ struct game {
 	struct walls walls;
 	struct stars stars;
 	struct meteors meteors;
+	Mix_Music *music;
 };
 
 void game_init(struct game *game, struct SDL_Renderer *renderer,
