@@ -77,7 +77,7 @@ void meteors_init(struct meteors *meteors, struct SDL_Renderer *renderer)
 		object_init(&meteor->object, renderer, &init_pos, meteor_xpm);
 		meteor_init(meteor);
 	}
-	meteors->count = 1;
+	meteors->count = 0;
 }
 
 void meteors_update(struct meteors *meteors)
