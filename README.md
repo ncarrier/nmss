@@ -84,5 +84,7 @@ For running on Windows directly, I don't know ^^
 
 ## How to play
 
-Use the arrows to move the ship and the `A` key to shoot at the aliens.
-
+* **Arrows**: move the ship
+* **A**: shoot
+* **F**: toggle fullscreen
+* **Space**: pause the game
