@@ -47,9 +47,9 @@ void score_update(struct score *score)
 	}
 }
 
-void score_increase(struct score *score)
+void score_increase(struct score *score, unsigned increment)
 {
-	score->value++;
+	score->value += increment;
 }
 
 void score_cleanup(struct score *score)

@@ -11,7 +11,7 @@ struct score {
 
 void score_init(struct score *score, struct SDL_Renderer *renderer);
 void score_update(struct score *score);
-void score_increase(struct score *score);
+void score_increase(struct score *score, unsigned increment);
 void score_cleanup(struct score *score);
 
 #endif /* SCORE_H_ */

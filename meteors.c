@@ -4,6 +4,8 @@
 
 #include "res/meteor.xpm"
 
+#define METEOR_MAX_HITS 3
+
 static struct SDL_Point get_point(int x)
 {
 	struct SDL_Point result;
@@ -56,6 +58,7 @@ static void meteor_init(struct meteor *meteor)
 	init_pos.x = origin.x;
 	init_pos.y = origin.y;
 	object_set_pos(&meteor->object, &init_pos);
+	meteor->hits = 0;
 }
 
 void meteors_init(struct meteors *meteors, struct SDL_Renderer *renderer)
@@ -84,7 +87,8 @@ void meteors_update(struct meteors *meteors)
 
 	for (i = 0; i < meteors->count; i++) {
 		meteor = meteors->meteors + i;
-		object_render(&meteor->object);
+		if (!meteor_is_dead(meteor))
+			object_render(&meteor->object);
 		meteor->position.x += meteor->speed.x;
 		meteor->position.y += meteor->speed.y;
 		meteor->object.pos.x = meteor->position.x;
@@ -116,12 +120,12 @@ void meteors_add(struct meteors *meteors)
 
 bool meteor_is_dead(struct meteor *meteor)
 {
-	return meteor->dead;
+	return meteor->hits == METEOR_MAX_HITS;
 }
 
-void meteor_set_dead(struct meteor *meteor)
+void meteor_hit(struct meteor *meteor)
 {
-	// TODO
+	meteor->hits++;
 }
 
 void meteors_cleanup(struct meteors *meteors)

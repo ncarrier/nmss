@@ -13,7 +13,7 @@ struct meteor {
 	struct double_point speed;
 	struct double_point position;
 	struct object object;
-	bool dead;
+	unsigned hits;
 };
 struct meteors {
 	struct meteor meteors[METEORS_NB];
@@ -27,7 +27,7 @@ void meteors_add(struct meteors *meteors);
 bool meteor_collides(struct meteor *meteor, const struct SDL_Rect *bb);
 struct meteor *meteors_get(struct meteors *meteors, unsigned i);
 bool meteor_is_dead(struct meteor *meteor);
-void meteor_set_dead(struct meteor *meteor);
+void meteor_hit(struct meteor *meteor);
 void meteors_cleanup(struct meteors *meteors);
 
 #endif /* METEORS_H_ */

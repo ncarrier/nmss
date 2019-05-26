@@ -144,7 +144,7 @@ static void check_alien_shoot_collisions(struct game *game) {
 		if (ship_shoot_hits(&game->ship, alien_bb)) {
 			alien_set_dead(alien);
 			explosion_start(find_dead_explosion(game), alien_bb);
-			score_increase(&game->score);
+			score_increase(&game->score, 1);
 			game->current_aliens_killed++;
 		}
 	}
@@ -158,13 +158,17 @@ static void check_meteor_collisions(struct game *game)
 
 	for (i = 0; i < meteors_get_nb(&game->meteors); i++) {
 		meteor = meteors_get(&game->meteors, i);
+		if (meteor_is_dead(meteor))
+			continue;
 		ship_bb = ship_get_bounding_box(&game->ship);
 
 		if (meteor_collides(meteor, ship_bb)) {
-			meteor_set_dead(meteor);
+			meteor_hit(meteor);
 			ship_set_dead(&game->ship);
 			explosion_start(find_dead_explosion(game),
 					ship_get_bounding_box(&game->ship));
+			message_init(&game->message, game->renderer,
+					MESSAGE_ID_LOOSER);
 		}
 	}
 }
@@ -176,7 +180,16 @@ static void check_meteor_shoot_collisions(struct game *game)
 
 	for (i = 0; i < meteors_get_nb(&game->meteors); i++) {
 		meteor = meteors_get(&game->meteors, i);
-		ship_shoot_hits(&game->ship, &meteor->object.pos);
+		if (meteor_is_dead(meteor))
+			continue;
+		if (ship_shoot_hits(&game->ship, &meteor->object.pos)) {
+			meteor_hit(meteor);
+			if (meteor_is_dead(meteor)) {
+				explosion_start(find_dead_explosion(game),
+						&meteor->object.pos);
+				score_increase(&game->score, 3);
+			}
+		}
 	}
 }
 
