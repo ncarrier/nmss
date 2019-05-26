@@ -21,6 +21,8 @@ void input_init(struct input *input, struct SDL_Window *window)
 
 static void handle_key(struct input *input, bool down)
 {
+	Uint32 flags;
+
 	switch (input->event.key.keysym.sym) {
 	case SDLK_a:
 		input->a_down = down;
@@ -31,11 +33,12 @@ static void handle_key(struct input *input, bool down)
 		break;
 
 	case SDLK_f:
-		if (down)
-			input->fullscreen = true;
-		if (input->fullscreen)
-			SDL_SetWindowFullscreen(input->window,
-					SDL_WINDOW_FULLSCREEN_DESKTOP);
+		if (!down) {
+			input->fullscreen = !input->fullscreen;
+			flags = input->fullscreen ?
+					SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+			SDL_SetWindowFullscreen(input->window, flags);
+		}
 		break;
 
 	case SDLK_DOWN:
