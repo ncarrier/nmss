@@ -3,6 +3,7 @@
 #include "screen.h"
 
 #include "res/meteor.xpm"
+#include "res/meteor_fragment.xpm"
 
 #define METEOR_MAX_HITS 3
 
@@ -71,11 +72,18 @@ void meteors_init(struct meteors *meteors, struct SDL_Renderer *renderer)
 		.w = SCREEN_SPRITE_WIDTH,
 		.h = SCREEN_SPRITE_HEIGHT,
 	};
+	unsigned j;
+	struct meteor_fragment *fragment;
 
 	for (i = 0; i < METEORS_NB; i++) {
 		meteor = meteors->meteors + i;
 		object_init(&meteor->object, renderer, &init_pos, meteor_xpm);
 		meteor_init(meteor);
+		for (j = 0; j < 4; j++) {
+			fragment = meteor->fragment + j;
+			object_init(&fragment->object, renderer, &init_pos,
+					meteor_fragment_xpm);
+		}
 	}
 	meteors->count = 0;
 }
@@ -84,11 +92,30 @@ void meteors_update(struct meteors *meteors)
 {
 	unsigned i;
 	struct meteor *meteor;
+	static const struct {
+		unsigned x;
+		unsigned y;
+	} velocity[4] = {
+			[0] = { .x = 1, .y = 1},
+			[1] = { .x = -1, .y = 1},
+			[2] = { .x = 1, .y = -1},
+			[3] = { .x = -1, .y = -1},
+	};
+	unsigned j;
+	struct meteor_fragment *fragment;
 
 	for (i = 0; i < meteors->count; i++) {
 		meteor = meteors->meteors + i;
-		if (!meteor_is_dead(meteor))
+		if (!meteor_is_dead(meteor)) {
 			object_render(&meteor->object);
+		} else {
+			for (j = 0; j < 4; j++) {
+				fragment = meteor->fragment + j;
+				object_render(&fragment->object);
+				fragment->object.pos.x += velocity[j].x;
+				fragment->object.pos.y += velocity[j].y;
+			}
+		}
 		meteor->position.x += meteor->speed.x;
 		meteor->position.y += meteor->speed.y;
 		meteor->object.pos.x = meteor->position.x;
@@ -110,7 +137,20 @@ struct meteor *meteors_get(struct meteors *meteors, unsigned i)
 
 bool meteor_collides(struct meteor *meteor, const struct SDL_Rect *bb)
 {
-	return SDL_HasIntersection(&meteor->object.pos, bb);
+	unsigned j;
+	struct meteor_fragment *fragment;
+
+	if (meteor_is_dead(meteor)) {
+		for (j = 0; j < 4; j++) {
+			fragment = meteor->fragment + j;
+			if (SDL_HasIntersection(&fragment->object.pos, bb))
+				return true;
+		}
+	} else {
+		return SDL_HasIntersection(&meteor->object.pos, bb);
+	}
+
+	return false;
 }
 
 void meteors_add(struct meteors *meteors)
@@ -125,7 +165,16 @@ bool meteor_is_dead(struct meteor *meteor)
 
 void meteor_hit(struct meteor *meteor)
 {
+	unsigned i;
+	struct meteor_fragment *fragment;
+
 	meteor->hits++;
+	if (meteor_is_dead(meteor)) {
+		for (i = 0; i < 4; i++) {
+			fragment = meteor->fragment + i;
+			object_set_pos(&fragment->object, &meteor->object.pos);
+		}
+	}
 }
 
 void meteors_cleanup(struct meteors *meteors)

@@ -9,11 +9,16 @@
 
 #define METEORS_NB 20
 
+struct meteor_fragment {
+	struct object object;
+};
+
 struct meteor {
 	struct double_point speed;
 	struct double_point position;
 	struct object object;
 	unsigned hits;
+	struct meteor_fragment fragment[4];
 };
 struct meteors {
 	struct meteor meteors[METEORS_NB];

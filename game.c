@@ -159,8 +159,6 @@ static void check_meteor_collisions(struct game *game)
 
 	for (i = 0; i < meteors_get_nb(&game->meteors); i++) {
 		meteor = meteors_get(&game->meteors, i);
-		if (meteor_is_dead(meteor))
-			continue;
 		ship_bb = ship_get_bounding_box(&game->ship);
 
 		if (meteor_collides(meteor, ship_bb)) {
