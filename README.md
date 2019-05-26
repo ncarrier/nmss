@@ -18,7 +18,7 @@ All the instructions are tested under debian stable (Stretch as of writing).
 
 As the root user:
 
-    apt-get install make gcc pkg-config libsdl2-dev libsdl2-image-dev
+    apt-get install make gcc pkg-config libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
 
 ### For Windows
 
