@@ -47,7 +47,12 @@ static int mvt_x_4(struct alien_movement *mvt, int x, int y) {
 }
 
 static int mvt_y_4(struct alien_movement *mvt, int x, int y) {
-	return cos(mvt->t * 0.1) * (SCREEN_HEIGHT / 3.) + (SCREEN_HEIGHT / 2);
+	float sign;
+
+	sign = mvt->alien_index % 2 ? 1. : -1.;
+
+	return sign * cos(mvt->t * 0.1) * (SCREEN_HEIGHT / 3.) +
+			(SCREEN_HEIGHT / 2);
 }
 
 static int mvt_x_5(struct alien_movement *mvt, int x, int y) {
