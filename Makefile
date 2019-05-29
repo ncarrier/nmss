@@ -1,10 +1,12 @@
 WARNINGS := -Wall -Wextra -Wno-unused-parameter
 OPTIMIZATION := -O3
+CC ?= gcc
+PKG_CONFIG ?= pkg-config
 
 all: nmss nmss.exe nmss.html
 
 nmss:*.c *.h res/*.xpm
-	gcc *.c -o nmss `pkg-config sdl2 SDL2_image --cflags --libs` -lm \
+	$(CC) *.c -o nmss `$(PKG_CONFIG) sdl2 SDL2_image --cflags --libs` -lm \
 		$(WARNINGS) $(OPTIMIZATION)
 
 nmss.exe:*.c *.h
