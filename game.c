@@ -2,6 +2,8 @@
 #include "alien_movement.h"
 #include "explosion.h"
 
+#define TICK_INTERVAL 16
+
 void game_init(struct game *game, struct SDL_Renderer *renderer,
 		struct SDL_Window *window) {
 	unsigned i;
@@ -24,6 +26,7 @@ void game_init(struct game *game, struct SDL_Renderer *renderer,
 	walls_init(&game->walls, renderer);
 	stars_init(&game->stars, renderer);
 	meteors_init(&game->meteors, renderer);
+	game->next_time = SDL_GetTicks() + TICK_INTERVAL;
 }
 
 static void add_alien(struct game *game) {
@@ -207,8 +210,18 @@ static void update_explosions(struct game *game) {
 		explosion_update(game->explosion + i);
 }
 
+static Uint32 time_left(Uint32 next_time)
+{
+	Uint32 now;
+
+	now = SDL_GetTicks();
+
+	return next_time <= now ? 0 : next_time - now;
+}
+
 void game_update(struct game *game) {
 	enum message_id id;
+	Uint32 delay;
 
 	stars_update(&game->stars);
 	walls_update(&game->walls);
@@ -234,6 +247,10 @@ void game_update(struct game *game) {
 	}
 	update_explosions(game);
 	score_update(&game->score);
+
+	delay = time_left(game->next_time);
+	SDL_Delay(delay);
+	game->next_time += TICK_INTERVAL;
 }
 
 void game_cleanup(struct game *game) {

@@ -17,6 +17,7 @@
 #define GAME_MAX_EXPLOSIONS 13
 
 struct game {
+	Uint32 next_time;
 	struct ship ship;
 	unsigned alien_popping_period;
 	bool all_aliens_dead;
