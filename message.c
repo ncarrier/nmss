@@ -18,6 +18,8 @@ void message_init(struct message *message, struct SDL_Renderer *renderer,
 	object_init(&message->object, renderer, &message_init_pos,
 			*messages_list[id]);
 	message->pause_duration = INITIAL_PAUSE_DURATION;
+	if (id == MESSAGE_ID_LOOSER)
+		message->pause_duration *= 10;
 	message->id = id;
 }
 

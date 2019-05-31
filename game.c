@@ -12,6 +12,7 @@ void game_init(struct game *game, struct SDL_Renderer *renderer,
 	game->alien_popping_period = ALIEN_POPPING_PERIOD;
 	game->nb_aliens = 0;
 	game->renderer = renderer;
+	game->window = window;
 	game->alien_movement = 0;
 	game->spawned_aliens = 0;
 	input_init(&game->input, window);
@@ -219,10 +220,23 @@ static Uint32 time_left(Uint32 next_time)
 	return next_time <= now ? 0 : next_time - now;
 }
 
+static void game_reset(struct game *game)
+{
+	struct SDL_Renderer *renderer;
+	struct SDL_Window *window;
+
+	renderer = game->renderer;
+	window = game->window;
+	game_cleanup(game);
+	game_init(game, renderer, window);
+}
+
 void game_update(struct game *game) {
 	enum message_id id;
 	Uint32 delay;
+	bool reset;
 
+	reset = false;
 	stars_update(&game->stars);
 	walls_update(&game->walls);
 	input_update(&game->input);
@@ -241,7 +255,7 @@ void game_update(struct game *game) {
 		message_update(&game->message);
 		/* TODO replace with some way to restart the game */
 		if (message_is_dead(&game->message) && id == MESSAGE_ID_LOOSER) {
-			game->input.loop = false;
+			reset = true;
 			printf("Final score %u\n", game->score.value);
 		}
 	}
@@ -251,6 +265,8 @@ void game_update(struct game *game) {
 	delay = time_left(game->next_time);
 	SDL_Delay(delay);
 	game->next_time += TICK_INTERVAL;
+	if (reset)
+		game_reset(game);
 }
 
 void game_cleanup(struct game *game) {

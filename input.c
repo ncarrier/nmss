@@ -19,6 +19,12 @@ void input_init(struct input *input, struct SDL_Window *window)
 	};
 }
 
+static void quit(struct input *input)
+{
+	printf("see u.\n");
+	input->loop = false;
+}
+
 static void handle_key(struct input *input, bool down)
 {
 	Uint32 flags;
@@ -39,6 +45,10 @@ static void handle_key(struct input *input, bool down)
 					SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
 			SDL_SetWindowFullscreen(input->window, flags);
 		}
+		break;
+
+	case SDLK_q:
+		quit(input);
 		break;
 
 	case SDLK_DOWN:
@@ -72,8 +82,7 @@ void input_update(struct input *input)
 
 		switch (input->event.type) {
 		case SDL_QUIT: {
-			printf("see u.\n");
-			input->loop = false;
+			quit(input);
 			break;
 		}
 

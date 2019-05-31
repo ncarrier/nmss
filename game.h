@@ -26,6 +26,7 @@ struct game {
 	unsigned spawned_aliens;
 	struct input input;
 	struct SDL_Renderer *renderer;
+	struct SDL_Window *window;
 	unsigned alien_movement;
 	struct explosion explosion[GAME_MAX_EXPLOSIONS];
 	struct score score;
